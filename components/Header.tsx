@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown, Mail, MapPin, Menu, Phone, X, CalendarHeart } from "lucide-react";
 import { Logo } from "./Logo";
+import { AuthLink } from "./AuthLink";
 import { categoryIcons } from "./ui";
 import { localePath, stripLocale, defaultLocale, locales } from "@/i18n/config";
 import { useDict, useLocale, useLp } from "@/i18n/LocaleProvider";
@@ -77,6 +78,7 @@ export function Header({ nav, menu, phones, email, address }: Props) {
             <MapPin className="h-3.5 w-3.5 text-accent" /> {address}
           </span>
           <div className="flex items-center gap-6">
+            <AuthLink />
             <a href={`mailto:${email}`} className="flex items-center gap-2 hover:text-white">
               <Mail className="h-3.5 w-3.5 text-accent" /> {email}
             </a>
@@ -256,6 +258,9 @@ export function Header({ nav, menu, phones, email, address }: Props) {
             )}
           </nav>
           <div className="space-y-3 border-t border-line p-5">
+            <div className="flex justify-center rounded-full bg-primary-900 py-3 text-[0.9rem] text-white/90">
+              <AuthLink />
+            </div>
             <Link
               href={lp("/appointment")}
               className="flex h-12 items-center justify-center gap-2 rounded-full bg-secondary font-semibold text-on-secondary"

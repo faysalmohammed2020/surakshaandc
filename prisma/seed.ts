@@ -8,7 +8,7 @@ import { resetDemoBlogs, seedDemoBlogs } from "./seed-blogs";
 /**
  * Creates (or repairs) the admin account used to sign in at /auth/signin → /admin.
  *
- *   SEED_ADMIN_EMAIL     default: admin@surakshaandc.com
+ *   SEED_ADMIN_EMAIL     default: admin@example.com
  *   SEED_ADMIN_PASSWORD  min 12 chars. If unset in development a random one is
  *                        generated and printed once. Required in production.
  *
@@ -16,15 +16,19 @@ import { resetDemoBlogs, seedDemoBlogs } from "./seed-blogs";
  * is only changed when SEED_ADMIN_PASSWORD is set.
  */
 async function seedAdminUser() {
-  const email = (process.env.SEED_ADMIN_EMAIL || "admin@surakshaandc.com").trim().toLowerCase();
+  const email = (process.env.SEED_ADMIN_EMAIL || "admin@example.com").trim().toLowerCase();
   const password = process.env.SEED_ADMIN_PASSWORD;
 
   if (!password && process.env.NODE_ENV === "production") {
     console.warn("Skipping admin seed: set SEED_ADMIN_PASSWORD (min 12 chars) to create one.");
     return;
   }
+  // Short passwords are fine for local development; production needs a strong one.
+  if (password && process.env.NODE_ENV === "production" && password.length < 12) {
+    throw new Error("SEED_ADMIN_PASSWORD must be at least 12 characters in production.");
+  }
   if (password && password.length < 12) {
-    throw new Error("SEED_ADMIN_PASSWORD must be at least 12 characters.");
+    console.warn("Warning: weak admin password (under 12 chars). Change it before going live.");
   }
 
   const existing = await db.user.findUnique({ where: { email } });

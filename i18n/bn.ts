@@ -72,6 +72,12 @@ export const bn: Dict = {
   },
 
   header: {
+
+    login: "লগইন",
+
+    logout: "লগআউট",
+
+    dashboard: "ড্যাশবোর্ড",
     openMenu: "মেনু খুলুন",
     closeMenu: "মেনু বন্ধ করুন",
     mainNav: "প্রধান মেনু",

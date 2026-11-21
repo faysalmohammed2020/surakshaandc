@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { CalendarDays, Mail, MessageCircle, Phone, Search, Trash2 } from "lucide-react";
+import { CalendarDays, Eye, Mail, MessageCircle, Phone, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 type Status = "NEW" | "CONTACTED" | "SCHEDULED" | "CLOSED";
@@ -57,9 +58,10 @@ export default function AdminEnquiries() {
   const [kind, setKind] = useState<"ALL" | "APPOINTMENT" | "CONTACT">("ALL");
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [toDelete, setToDelete] = useState<Item | null>(null);
+  const selected = items.find((i) => i.id === selectedId) ?? null;
 
   const load = useCallback(async () => {
     const sp = new URLSearchParams();
@@ -106,6 +108,7 @@ export default function AdminEnquiries() {
     setToDelete(null);
     if (!res.ok) return toast.error("Could not delete");
     setItems((all) => all.filter((i) => i.id !== item.id));
+    setSelectedId(null);
     toast.success("Deleted");
     void load();
   }
@@ -162,78 +165,117 @@ export default function AdminEnquiries() {
       ) : (
         <ul className="space-y-3">
           {items.map((i) => (
-            <li key={i.id} className="rounded-2xl border border-border bg-card shadow-sm">
-              <button className="flex w-full flex-wrap items-center gap-3 p-4 text-start" onClick={() => setOpen(open === i.id ? null : i.id)}>
-                <span className={cn("rounded-full px-2.5 py-1 text-xs font-bold", TONE[i.status])}>{LABEL[i.status]}</span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate font-semibold">
-                    {i.parentName}
-                    {i.childName ? <span className="font-normal text-muted-foreground"> · child: {i.childName}{i.childAge ? ` (${i.childAge})` : ""}</span> : null}
-                  </span>
-                  <span className="block truncate text-xs text-muted-foreground">
-                    {i.kind === "APPOINTMENT" ? `${i.requestType ?? "Appointment"}${i.service ? ` · ${i.service}` : ""}` : "Contact message"} ·{" "}
-                    {new Date(i.createdAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })} · {i.locale.toUpperCase()}
-                  </span>
+            <li key={i.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <span className={cn("rounded-full px-2.5 py-1 text-xs font-bold", TONE[i.status])}>{LABEL[i.status]}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-semibold">
+                  {i.parentName}
+                  {i.childName ? <span className="font-normal text-muted-foreground"> · child: {i.childName}{i.childAge ? ` (${i.childAge})` : ""}</span> : null}
                 </span>
-                {i.preferredDate && (
-                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                    <CalendarDays className="size-3.5" /> {i.preferredDate}
-                  </span>
-                )}
-              </button>
-
-              {open === i.id && (
-                <div className="space-y-4 border-t border-border p-4">
-                  <div className="flex flex-wrap gap-2">
-                    <a href={`tel:${i.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-sm font-medium hover:bg-muted/70">
-                      <Phone className="size-4" /> {i.phone}
-                    </a>
-                    <a href={waLink(i.phone)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg bg-green-500/15 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-500/25 dark:text-green-400">
-                      <MessageCircle className="size-4" /> WhatsApp
-                    </a>
-                    {i.email && (
-                      <a href={`mailto:${i.email}`} className="inline-flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-sm font-medium hover:bg-muted/70">
-                        <Mail className="size-4" /> {i.email}
-                      </a>
-                    )}
-                  </div>
-                  {i.message && <p className="whitespace-pre-wrap rounded-xl bg-muted/50 p-3 text-sm">{i.message}</p>}
-
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-semibold text-muted-foreground">Status</span>
-                    {STATUSES.map((s) => (
-                      <button key={s} onClick={() => patch(i.id, { status: s })} className={chip(i.status === s)}>
-                        {LABEL[s]}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-muted-foreground" htmlFor={`n-${i.id}`}>
-                      Internal notes
-                    </label>
-                    <textarea
-                      id={`n-${i.id}`}
-                      rows={3}
-                      value={notes[i.id] ?? i.adminNotes}
-                      onChange={(e) => setNotes((n) => ({ ...n, [i.id]: e.target.value }))}
-                      className="w-full rounded-lg border border-input bg-background p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
-                    />
-                    <div className="flex justify-between">
-                      <Button size="sm" disabled={(notes[i.id] ?? i.adminNotes) === i.adminNotes} onClick={() => patch(i.id, { adminNotes: notes[i.id] ?? "" })}>
-                        Save notes
-                      </Button>
-                      <Button size="sm" variant="ghost" className="text-destructive" onClick={() => setToDelete(i)}>
-                        <Trash2 /> Delete
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {i.kind === "APPOINTMENT" ? `${i.requestType ?? "Appointment"}${i.service ? ` · ${i.service}` : ""}` : "Contact message"} ·{" "}
+                  {new Date(i.createdAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })} · {i.locale.toUpperCase()}
+                </span>
+              </span>
+              {i.preferredDate && (
+                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <CalendarDays className="size-3.5" /> {i.preferredDate}
+                </span>
               )}
+              <Button size="sm" variant="outline" onClick={() => setSelectedId(i.id)}>
+                <Eye /> View details
+              </Button>
             </li>
           ))}
         </ul>
       )}
+
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelectedId(null)}>
+        <DialogContent className="sm:max-w-xl">
+          {selected && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selected.kind === "APPOINTMENT" ? "Appointment request" : "Contact message"}</DialogTitle>
+                <DialogDescription>
+                  Received {new Date(selected.createdAt).toLocaleString([], { dateStyle: "long", timeStyle: "short" })} · {selected.locale === "bn" ? "Bangla" : "English"} site
+                </DialogDescription>
+              </DialogHeader>
+
+              <dl className="grid gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
+                {([
+                  [selected.kind === "APPOINTMENT" ? "Parent / guardian" : "Name", selected.parentName],
+                  ["Phone", selected.phone],
+                  ["Email", selected.email],
+                  ["Child", selected.childName],
+                  ["Child's age", selected.childAge],
+                  ["Request type", selected.requestType],
+                  ["Service", selected.service],
+                  ["Preferred date", selected.preferredDate],
+                ] as [string, string | null][])
+                  .filter(([, v]) => v)
+                  .map(([k, v]) => (
+                    <div key={k}>
+                      <dt className="text-xs font-semibold text-muted-foreground">{k}</dt>
+                      <dd className="mt-0.5 break-words font-medium">{v}</dd>
+                    </div>
+                  ))}
+              </dl>
+
+              {selected.message && (
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground">Message</p>
+                  <p className="mt-1 whitespace-pre-wrap rounded-xl bg-muted/50 p-3 text-sm">{selected.message}</p>
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2">
+                <a href={`tel:${selected.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-sm font-medium hover:bg-muted/70">
+                  <Phone className="size-4" /> Call
+                </a>
+                <a href={waLink(selected.phone)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg bg-green-500/15 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-500/25 dark:text-green-400">
+                  <MessageCircle className="size-4" /> WhatsApp
+                </a>
+                {selected.email && (
+                  <a href={`mailto:${selected.email}`} className="inline-flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-sm font-medium hover:bg-muted/70">
+                    <Mail className="size-4" /> Email
+                  </a>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-muted-foreground">Status</span>
+                {STATUSES.map((st) => (
+                  <button key={st} onClick={() => patch(selected.id, { status: st })} className={chip(selected.status === st)}>
+                    {LABEL[st]}
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-muted-foreground" htmlFor="enq-notes">
+                  Internal notes
+                </label>
+                <textarea
+                  id="enq-notes"
+                  rows={3}
+                  value={notes[selected.id] ?? selected.adminNotes}
+                  onChange={(e) => setNotes((n) => ({ ...n, [selected.id]: e.target.value }))}
+                  className="w-full rounded-lg border border-input bg-background p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40"
+                />
+              </div>
+
+              <DialogFooter className="sm:justify-between">
+                <Button variant="ghost" className="text-destructive" onClick={() => setToDelete(selected)}>
+                  <Trash2 /> Delete
+                </Button>
+                <Button disabled={(notes[selected.id] ?? selected.adminNotes) === selected.adminNotes} onClick={() => patch(selected.id, { adminNotes: notes[selected.id] ?? "" })}>
+                  Save notes
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <AlertDialogContent>

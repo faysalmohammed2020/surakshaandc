@@ -69,6 +69,12 @@ export const en = {
   },
 
   header: {
+
+    login: "Login",
+
+    logout: "Logout",
+
+    dashboard: "Dashboard",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     mainNav: "Main",
