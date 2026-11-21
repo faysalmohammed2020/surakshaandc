@@ -47,7 +47,7 @@ export function Button({ href, variant = "primary", size = "md", className = "",
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 hover:-translate-y-0.5 ${v} ${s} ${className}`}
+      className={`site-button inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 hover:-translate-y-0.5 ${v} ${s} ${className}`}
       {...rest}
     >
       {children}
@@ -69,10 +69,10 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div className={`${align === "center" ? "mx-auto text-center" : ""} max-w-2xl ${className}`}>
+    <div className={`section-heading ${align === "center" ? "mx-auto text-center" : ""} max-w-2xl ${className}`}>
       {eyebrow && (
         <p lang={/[\u0980-\u09FF]/.test(eyebrow) ? "bn" : undefined} className={`eyebrow ${align === "center" ? "justify-center" : ""}`}>
-          <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+          <span className="h-px w-6 bg-secondary" />
           {eyebrow}
         </p>
       )}

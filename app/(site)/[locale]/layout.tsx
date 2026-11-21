@@ -8,6 +8,7 @@ import "@fontsource/baloo-da-2/700.css";
 import "@fontsource/baloo-da-2/800.css";
 import "../../globals.css";
 import { Header } from "@/components/Header";
+import { SiteMotion } from "@/components/SiteMotion";
 import { Footer } from "@/components/Footer";
 import { Suspense } from "react";
 import { FloatingContact } from "@/components/FloatingContact";
@@ -64,13 +65,14 @@ export default async function RootLayout({ children, params }: P) {
 
   return (
     <html lang={localeMeta[locale].htmlLang} suppressHydrationWarning>
-      <body className="min-h-screen">
+      <body className="public-site min-h-screen">
         <LocaleProvider locale={locale} dict={dict}>
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2">
             {dict.common.skipToContent}
           </a>
           <Header nav={getNav(dict)} menu={menu} phones={site.phones} email={site.email} address={dict.site.address} />
           <main id="main">{children}</main>
+          <SiteMotion />
           <Footer locale={locale} />
           <FloatingContact phone={site.phones[0]} />
           <WhatsAppButton number={site.whatsapp} />

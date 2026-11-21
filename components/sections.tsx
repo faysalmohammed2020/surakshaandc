@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, CalendarHeart, ChevronRight, Phone } from "lucide-react";
+import { CalendarHeart, ChevronRight, Phone } from "lucide-react";
 import type { Block, Category, Service } from "@/data/types";
 import { site, telHref } from "@/lib/site";
 import { getDict } from "@/i18n";
@@ -20,7 +20,7 @@ export function PageHero({
   crumbs: { label: string; href?: string }[];
 }) {
   return (
-    <section className="relative overflow-hidden bg-primary-50">
+    <section className="care-page-hero relative overflow-hidden bg-primary-50">
       <div className="dot-grid absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       <Blob className="absolute -right-24 -top-24 h-80 w-80 text-secondary-100" />
       <Blob className="absolute -bottom-32 -left-20 h-72 w-72 text-accent-100" />
@@ -55,28 +55,17 @@ export function CategoryCard({ c, i, count, locale }: { c: Category; i: number; 
   return (
     <Link
       href={localePath(locale, `/services/${c.slug}`)}
-      className={`group relative flex flex-col overflow-hidden rounded-[var(--radius-blob)] border-2 border-transparent bg-card p-3 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift ${t.ring}`}
+      className={`care-category group relative flex flex-col overflow-hidden rounded-[var(--radius-blob)] border-2 border-transparent bg-card p-3 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift ${t.ring}`}
     >
-      <ImgFrame className="aspect-[4/3] rounded-[1.6rem]">
-        <Image
-          src={c.image}
-          alt={c.name}
-          fill
-          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <span className={`absolute left-4 top-4 grid h-12 w-12 place-items-center rounded-2xl shadow-soft ${t.icon}`}>
-          <Icon className="h-6 w-6" />
-        </span>
-      </ImgFrame>
+      <div className="care-service-symbol"><Icon strokeWidth={1.4} aria-hidden="true" /><span>{fmt(d.cards.programmes, { n: fmtNum(locale, count) })}</span></div>
       <div className="flex flex-1 flex-col px-3 pb-3 pt-5">
-        <p className="text-sm font-medium text-secondary-700">{c.nameBn}</p>
+        {locale === "en" && <p lang="bn" className="text-sm font-medium text-secondary-700">{c.nameBn}</p>}
         <h3 className="mt-1 text-2xl font-bold text-ink">{c.name}</h3>
-        <p className="mt-2 flex-1 leading-relaxed text-ink-soft">{c.description}</p>
+        <p className="care-category-description mt-2 flex-1 leading-relaxed text-ink-soft">{c.description}</p>
         <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-sm font-semibold">
           <span className="text-subtle">{fmt(d.cards.programmes, { n: fmtNum(locale, count) })}</span>
           <span className="flex items-center gap-1 text-primary-700">
-            {d.common.explore} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            {d.common.explore}
           </span>
         </div>
       </div>
@@ -90,7 +79,7 @@ export function ServiceCard({ s, i = 0, locale }: { s: Service; i?: number; loca
   return (
     <Link
       href={localePath(locale, `/services/${s.category}/${s.slug}`)}
-      className={`group flex gap-4 rounded-3xl border-2 border-line bg-card p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft ${t.ring}`}
+      className={`care-service-card group flex gap-4 rounded-3xl border-2 border-line bg-card p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft ${t.ring}`}
     >
       <ImgFrame className="aspect-square w-24 shrink-0 rounded-2xl sm:w-28">
         {s.image && (
@@ -101,7 +90,6 @@ export function ServiceCard({ s, i = 0, locale }: { s: Service; i?: number; loca
         <h3 className="text-lg font-bold leading-snug text-ink group-hover:text-primary-700">{s.title}</h3>
         <p className="mt-1 line-clamp-2 text-[0.92rem] leading-relaxed text-ink-soft">{s.excerpt}</p>
       </div>
-      <ArrowUpRight className="mt-2 h-5 w-5 shrink-0 text-subtle transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
     </Link>
   );
 }
@@ -144,7 +132,7 @@ export function CtaBand({ locale }: { locale: Locale }) {
   const d = getDict(locale);
   return (
     <section className="container-x mt-24">
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-primary px-6 py-14 text-on-primary sm:px-12 md:py-16">
+      <div className="care-cta relative overflow-hidden rounded-[2.5rem] bg-primary px-6 py-14 text-on-primary sm:px-12 md:py-16">
         <Blob className="absolute -right-16 -top-20 h-72 w-72 text-white/10" />
         <Blob className="absolute -bottom-28 right-1/4 h-56 w-56 text-accent/20" />
         <div className="relative grid items-center gap-8 md:grid-cols-[1.4fr_1fr]">

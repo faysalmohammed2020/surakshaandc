@@ -12,7 +12,6 @@ export function FloatingContact({ phone }: { phone: string }) {
       aria-label={fmt(d.common.callPhone, { phone })}
       className="fixed bottom-24 right-5 z-40 grid h-12 w-12 place-items-center rounded-full bg-primary text-on-primary shadow-lift transition hover:scale-105 md:hidden"
     >
-      <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-25" />
       <Phone className="relative h-6 w-6" />
     </a>
   );

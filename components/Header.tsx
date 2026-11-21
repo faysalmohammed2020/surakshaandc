@@ -33,7 +33,7 @@ function LangSwitch({ className = "" }: { className?: string }) {
       lang={other}
       prefetch={false}
       aria-label={d.header.switchTo}
-      className={`inline-flex h-11 items-center rounded-full border-2 border-primary-200 px-4 font-semibold text-primary-700 transition hover:border-primary hover:bg-primary-50 ${className}`}
+      className={`lang-switch inline-flex h-11 items-center rounded-full border-2 border-primary-200 px-4 font-semibold text-primary-700 transition hover:border-primary hover:bg-primary-50 ${className}`}
     >
       {d.header.otherLang}
     </Link>
@@ -63,7 +63,9 @@ export function Header({ nav, menu, phones, email, address }: Props) {
   }, [pathname]);
 
   useEffect(() => {
+    const previous = document.body.style.overflow;
     document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = previous; };
   }, [open]);
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
@@ -72,7 +74,7 @@ export function Header({ nav, menu, phones, email, address }: Props) {
   return (
     <>
       {/* Top bar */}
-      <div className="hidden bg-primary-900 text-[0.82rem] text-white/85 md:block">
+      <div className="site-topbar hidden bg-primary-900 text-[0.82rem] text-white/85 md:block">
         <div className="container-x flex h-10 items-center justify-between gap-6">
           <span className="flex items-center gap-2">
             <MapPin className="h-3.5 w-3.5 text-accent" /> {address}
@@ -92,7 +94,7 @@ export function Header({ nav, menu, phones, email, address }: Props) {
       </div>
 
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`site-header sticky top-0 z-50 transition-all duration-300 ${
           scrolled ? "bg-white/90 shadow-soft backdrop-blur-md" : "bg-surface"
         }`}
         onMouseLeave={() => setMega(false)}
@@ -138,7 +140,7 @@ export function Header({ nav, menu, phones, email, address }: Props) {
             <LangSwitch />
             <Link
               href={lp("/appointment")}
-              className="hidden h-11 items-center gap-2 rounded-full bg-secondary px-5 font-semibold text-on-secondary shadow-soft transition hover:-translate-y-0.5 hover:bg-secondary-600 sm:inline-flex"
+              className="header-book hidden h-11 items-center gap-2 rounded-full bg-secondary px-5 font-semibold text-on-secondary shadow-soft transition hover:-translate-y-0.5 hover:bg-secondary-600 sm:inline-flex"
             >
               <CalendarHeart className="h-4.5 w-4.5" /> {d.common.bookAppointment}
             </Link>
@@ -192,7 +194,7 @@ export function Header({ nav, menu, phones, email, address }: Props) {
       </header>
 
       {/* Mobile drawer */}
-      <div className={`fixed inset-0 z-[60] lg:hidden ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
+      <div className={`site-mobile-drawer fixed inset-0 z-[60] overflow-hidden lg:hidden ${open ? "" : "pointer-events-none"}`} aria-hidden={!open} inert={!open}>
         <div
           className={`absolute inset-0 bg-ink/40 backdrop-blur-sm transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
           onClick={() => setOpen(false)}

@@ -12,7 +12,7 @@ export function Footer({ locale }: { locale: Locale }) {
   const lp = (h: string) => localePath(locale, h);
   const year = new Date().getFullYear();
   return (
-    <footer className="relative mt-24 overflow-hidden bg-primary-900 text-white/80">
+    <footer className="site-footer relative mt-24 overflow-hidden bg-primary-900 text-white/80">
       <svg aria-hidden className="absolute -top-px left-0 w-full text-surface" viewBox="0 0 1440 60" preserveAspectRatio="none">
         <path fill="currentColor" d="M0,0 L1440,0 L1440,20 C1200,60 960,0 720,24 C480,48 240,6 0,32 Z" />
       </svg>
