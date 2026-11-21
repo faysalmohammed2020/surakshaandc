@@ -21,7 +21,7 @@ export const categories: Category[] = [
     "name": "Speech & Language Therapy",
     "nameBn": "স্পিচ ও ল্যাঙ্গুয়েজ থেরাপি",
     "description": "Helping children understand, express and connect — from first words to confident conversation.",
-    "image": "https://www.surakshaandc.com/backend/img/fact/Kpk9mGMoZxUwMuYOy5JE.png",
+    "image": "/images/speechlanguagetherapy.png",
     "services": [
       "speech-delay-management",
       "communication-skills-development",
@@ -35,7 +35,7 @@ export const categories: Category[] = [
     "name": "Behaviour Therapy (ABA-Based)",
     "nameBn": "বিহেভিয়ার থেরাপি (ABA)",
     "description": "Evidence-based ABA support for positive behaviour, social skills, focus and emotional regulation.",
-    "image": "https://www.surakshaandc.com/backend/img/fact/Im0M1TMOqKTjsjbUYqQJ.png",
+    "image": "/images/behaviourtherapy.png",
     "services": [
       "behaviour-modification",
       "social-skill-development",
@@ -49,7 +49,7 @@ export const categories: Category[] = [
     "name": "Sensory Integration",
     "nameBn": "সেন্সরি ইন্টিগ্রেশন",
     "description": "Individual sensory assessment and a dedicated sensory gym so children feel calm, safe and ready to learn.",
-    "image": "https://www.surakshaandc.com/backend/img/fact/NURH10EaqwOVstioYE8p.png",
+    "image": "/images/sensoryintegration1.jpeg",
     "services": [
       "individualized-sensory-assessment",
       "the-sensory-gym",
@@ -62,7 +62,7 @@ export const categories: Category[] = [
     "name": "Parent Guidance & Counseling",
     "nameBn": "প্যারেন্ট গাইডেন্স ও কাউন্সেলিং",
     "description": "Coaching parents as co-therapists with practical home strategies and long-term planning.",
-    "image": "https://www.surakshaandc.com/backend/img/fact/AUoBY2exlY8KU04uKUOp.jpg",
+    "image": "/images/ParentGuidance.png",
     "services": [
       "behavior-management-techniques",
       "home-based-practice-guidance",
@@ -75,7 +75,7 @@ export const categories: Category[] = [
     "name": "Occupational Therapy",
     "nameBn": "অকুপেশনাল থেরাপি",
     "description": "Building motor skills, handwriting and everyday independence through purposeful play.",
-    "image": "https://www.surakshaandc.com/backend/img/fact/LHClkpfd4FamFFP2sZAz.jpg",
+    "image": "/images/OccupationalTherapy.jpg",
     "services": [
       "fine-gross-motor-skills-improvement",
       "sensory-integration-creating-comfort-in-a-sensory-world",
@@ -516,7 +516,7 @@ export const services: Service[] = [
     "slug": "behaviour-modification",
     "category": "behaviour-therapy",
     "title": "Behaviour Modification",
-    "image": "https://www.surakshaandc.com/backend/img/service/zN8EmwItpnUkCYGecDfk.webp",
+    "image": "/images/behaviourmodification.jpg",
     "excerpt": "Applied Behaviour Analysis (ABA) is an evidence-based therapeutic approach that has shown remarkable success in helping children with autism and neurodevelopmental disorders. At Suraksha Autism & Neuro Disorder Centre in",
     "blocks": [
       {
@@ -606,7 +606,7 @@ export const services: Service[] = [
     "slug": "social-skill-development",
     "category": "behaviour-therapy",
     "title": "Social Skill Development",
-    "image": "https://www.surakshaandc.com/backend/img/service/R6Y0u51H3AlmLpyzIZdG.webp",
+    "image": "/images/socialskilldevelopment.jpg",
     "excerpt": "The Importance of Social SkillsSocial competence is crucial for friendship, academic success, and future employment. Our ABA-based social skills program systematically teaches the building blocks of successful social int",
     "blocks": [
       {
@@ -689,7 +689,7 @@ export const services: Service[] = [
     "slug": "focus-attention-improvement",
     "category": "behaviour-therapy",
     "title": "Focus & Attention Improvement",
-    "image": "https://www.surakshaandc.com/backend/img/service/Gap0Ca2yswK54OFw9H5e.webp",
+    "image": "/images/focusattentionimprovement.jpg",
     "excerpt": "Building Foundations for Academic SuccessAttention difficulties can significantly impact learning and daily functioning. Our ABA-based attention training program systematically builds the skills needed for sustained focu",
     "blocks": [
       {
@@ -768,7 +768,7 @@ export const services: Service[] = [
     "slug": "emotion-regulation-techniques",
     "category": "behaviour-therapy",
     "title": "Emotion Regulation Techniques",
-    "image": "https://www.surakshaandc.com/backend/img/service/FhcHLRU2lzH5ao1CdSmm.webp",
+    "image": "/images/emotionregulation.jpg",
     "excerpt": "Developing Emotional IntelligenceMany children with neurodevelopmental challenges experience emotions intensely and need support in learning to recognize, understand, and manage their feelings appropriately.",
     "blocks": [
       {
@@ -851,7 +851,7 @@ export const services: Service[] = [
     "slug": "individualized-sensory-assessment",
     "category": "sensory-integration",
     "title": "Individualized Sensory Assessment",
-    "image": "https://www.surakshaandc.com/backend/img/service/o47bxbsQjQ4IOL0XSPSE.webp",
+    "image": "/images/individualizedsensoryassessment.jpg",
     "excerpt": "We begin with a detailed evaluation using standardized tools and skilled observation to create a Personalized Sensory Map. This helps us understand:",
     "blocks": [
       {
@@ -882,7 +882,7 @@ export const services: Service[] = [
     "slug": "the-sensory-gym",
     "category": "sensory-integration",
     "title": "The Sensory Gym",
-    "image": "https://www.surakshaandc.com/backend/img/service/n7JibkhWWCiSbkXsUQvA.webp",
+    "image": "/images/thesensorygym.jpg",
     "excerpt": "Where Therapy Feels Like PlayOur state-of-the-art sensory gym is not a clinic—it’s an exploration lab filled with therapeutic equipment designed to provide the “just-right challenge.”",
     "blocks": [
       {
@@ -924,7 +924,7 @@ export const services: Service[] = [
     "slug": "our-core-therapeutic-strategies",
     "category": "sensory-integration",
     "title": "Our Core Therapeutic Strategies",
-    "image": "https://www.surakshaandc.com/backend/img/service/DKVxErlPXQVpf4C4uOV5.webp",
+    "image": "/images/therapeutictrategies.jpg",
     "excerpt": "A. For Sensory Over-Responsiveness (Helping the Overwhelmed Child)",
     "blocks": [
       {
@@ -1000,7 +1000,7 @@ export const services: Service[] = [
     "slug": "behavior-management-techniques",
     "category": "parent-guidance-counseling",
     "title": "Behavior Management Techniques",
-    "image": "https://www.surakshaandc.com/backend/img/service/Plvuj93UPhLBZWXxxcuE.webp",
+    "image": "/images/behaviormanagementtechniques.jpg",
     "excerpt": "We move beyond traditional discipline to teach you how behavior works, not just how to control it. Using principles of Applied Behavior Analysis (ABA) and Positive Behavior Support, we help you understand the function be",
     "blocks": [
       {
@@ -1046,7 +1046,7 @@ export const services: Service[] = [
     "slug": "home-based-practice-guidance",
     "category": "parent-guidance-counseling",
     "title": "Home-Based Practice Guidance",
-    "image": "https://www.surakshaandc.com/backend/img/service/d0kkTgCVn4E1spWX9UWh.webp",
+    "image": "/images/homebasedpractice.jpg",
     "excerpt": "Therapy should not feel like a separate, clinical task. Our mission is to help you transform ordinary moments into extraordinary learning opportunities. We provide you with a personalized “Therapy-in-Action” plan that in",
     "blocks": [
       {
@@ -1092,7 +1092,7 @@ export const services: Service[] = [
     "slug": "progress-review-long-term-planning",
     "category": "parent-guidance-counseling",
     "title": "Progress Review & Long-Term Planning",
-    "image": "https://www.surakshaandc.com/backend/img/service/9s4NTZDLMPv9J31zeRJA.webp",
+    "image": "/images/ProgressReview.jpg",
     "excerpt": "Your child’s development is a marathon, not a sprint. We partner with you not just for today’s session, but for your child’s entire developmental trajectory. Our structured review and planning system ensures you always k",
     "blocks": [
       {
@@ -1155,7 +1155,7 @@ export const services: Service[] = [
     "slug": "fine-gross-motor-skills-improvement",
     "category": "occupational-therapy",
     "title": "Fine & Gross Motor Skills Improvement",
-    "image": "https://www.surakshaandc.com/backend/img/service/HpCUIeHplqC3lUM4iJMv.png",
+    "image": "/images/FineGross.jpg",
     "excerpt": "Every child deserves to experience the joy of movement and the confidence that comes with physical mastery. At Suraksha, we understand that motor skills form the foundation for so many childhood experiences – from playin",
     "blocks": [
       {
@@ -1296,7 +1296,7 @@ export const services: Service[] = [
     "slug": "sensory-integration-creating-comfort-in-a-sensory-world",
     "category": "occupational-therapy",
     "title": "Sensory Integration: Creating Comfort in a Sensory World",
-    "image": "https://www.surakshaandc.com/backend/img/service/aDxv3fl4vu6uqpsKaMa4.webp",
+    "image": "/images/CreatingComfort.jpg",
     "excerpt": "For some children, the world can feel overwhelming or confusing because their nervous system processes sensory information differently. Our Sensory Integration therapy creates a safe space where your child can learn to u",
     "blocks": [
       {
@@ -1475,7 +1475,7 @@ export const services: Service[] = [
     "slug": "handwriting-functional-independence-training",
     "category": "occupational-therapy",
     "title": "Handwriting & Functional Independence Training",
-    "image": "https://www.surakshaandc.com/backend/img/service/4SgZGuSweJnGvmm5bTdn.webp",
+    "image": "/images/Handwriting.jpg",
     "excerpt": "This comprehensive program addresses both the fine motor requirements of handwriting and the broader skills needed for functional independence in academic and daily life settings.",
     "blocks": [
       {
