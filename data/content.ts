@@ -89,7 +89,7 @@ export const services: Service[] = [
     "slug": "for-ages-0-6",
     "category": "early-intervention",
     "title": "For Ages 0–6",
-    "image": "https://www.surakshaandc.com/backend/img/service/lt39AhBuwyKc3U2TFAU9.webp",
+    "image": "/images/earlyintervention.jpg",
     "excerpt": "We don’t believe in a one-size-fits-all approach. Instead, we create personalized developmental roadmaps that respect your child’s unique timeline and learning style. Our program is divided into key developmental phases ",
     "blocks": [
       {
@@ -131,7 +131,7 @@ export const services: Service[] = [
     "slug": "intensive-developmental-training",
     "category": "early-intervention",
     "title": "Intensive Developmental Training",
-    "image": "https://www.surakshaandc.com/backend/img/service/tW12P1jf3DDkMk12Z338.png",
+    "image": "/images/intensive developmental training.jpg",
     "excerpt": "“Intensive” doesn’t mean overwhelming—it means purposeful, consistent, and integrated. Our EIP blends therapies into a seamless daily structure that feels like playful engagement, not clinical work.",
     "blocks": [
       {
@@ -177,7 +177,7 @@ export const services: Service[] = [
     "slug": "parent-supported-therapy-model",
     "category": "early-intervention",
     "title": "Parent-Supported Therapy Model",
-    "image": "https://www.surakshaandc.com/backend/img/service/7yfIQbGe2qloYZWj0Hme.webp",
+    "image": "/images/parent-supported therapy model.jpg",
     "excerpt": "The most crucial component of our EIP is you. Research is clear: outcomes are strongest when parents are active, trained co-therapists. Our model is built on coaching, not just consultation.",
     "blocks": [
       {
@@ -223,7 +223,7 @@ export const services: Service[] = [
     "slug": "speech-delay-management",
     "category": "speech-language-therapy",
     "title": "Speech Delay Management",
-    "image": "https://www.surakshaandc.com/backend/img/service/GdF5GxbKPoNGNHo2ndaa.jpeg",
+    "image": "/images/speechdelaymanagement.jpg",
     "excerpt": "Every child develops at their own pace, but if your child is significantly behind in speech milestones compared to other children their age, they may benefit from speech delay therapy.",
     "blocks": [
       {
@@ -290,7 +290,7 @@ export const services: Service[] = [
     "slug": "communication-skills-development",
     "category": "speech-language-therapy",
     "title": "Communication Skills Development",
-    "image": "https://www.surakshaandc.com/backend/img/service/EcOnej5syEakrybxILH1.jpeg",
+    "image": "/images/communicationskillsdevelopment.jpg",
     "excerpt": "Communication is more than just words—it's about sharing thoughts, feelings, and needs effectively.",
     "blocks": [
       {
@@ -357,7 +357,7 @@ export const services: Service[] = [
     "slug": "social-communication-pragmatic-skills",
     "category": "speech-language-therapy",
     "title": "Social Communication & Pragmatic Skills",
-    "image": "https://www.surakshaandc.com/backend/img/service/p5bmFwT8eqAJKQBr7OPG.jpeg",
+    "image": "/images/socialcommunicationskills.jpg",
     "excerpt": "Some children know many words but struggle with the social rules of communication. We help them navigate the unspoken rules of conversation.",
     "blocks": [
       {
@@ -424,7 +424,7 @@ export const services: Service[] = [
     "slug": "alternative-augmentative-communication",
     "category": "speech-language-therapy",
     "title": "Alternative & Augmentative Communication",
-    "image": "https://www.surakshaandc.com/backend/img/service/OCST3S5NxMjOqkuFh4mY.jpeg",
+    "image": "/images/alternativeaugmentative.jpg",
     "excerpt": "For some children, speaking is particularly challenging. AAC provides alternative ways to express oneself while working on speech.",
     "blocks": [
       {
