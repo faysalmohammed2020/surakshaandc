@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, CheckCheck, Circle, Globe, Mail, MessageSquare, Phone, Search, Send, SmilePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { coalescedRefresh, every, subscribeRealtime } from "@/lib/realtime/client";
 import {
   CHAT_REACTIONS,
   type AdminConversationDTO,
@@ -13,7 +14,6 @@ import {
 } from "@/lib/chat/shared";
 
 type Filter = "OPEN" | "CLOSED" | "ALL";
-const POLL_MS = 2500;
 
 const newId = () =>
   (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}${Math.random().toString(36).slice(2)}`).replace(/[^A-Za-z0-9_-]/g, "");
@@ -44,7 +44,7 @@ export default function AdminChat() {
   const [error, setError] = useState("");
 
   const activeRef = useRef<string | null>(null);
-  const cursor = useRef<string | null>(null);
+  const cursor = useRef<string | null>(new Date(Date.now() - 2500).toISOString());
   const bottom = useRef<HTMLDivElement>(null);
   const typingSentAt = useRef(0);
   const filterRef = useRef(filter);
@@ -120,30 +120,40 @@ export default function AdminChat() {
     [loadList],
   );
 
-  // Poll for new events (also marks the agent as online for visitors).
+  // Fetch committed changes only when the socket signals new activity.
   useEffect(() => {
     let stop = false;
-    let timer: ReturnType<typeof setTimeout>;
-    const tick = async () => {
+    const updates = coalescedRefresh(async () => {
       try {
         const url = `/api/chat/poll?as=admin${cursor.current ? `&since=${encodeURIComponent(cursor.current)}` : ""}`;
         const res = await fetch(url, { cache: "no-store" });
-        if (res.ok) {
+        if (res.ok && !stop) {
           const j: PollResult = await res.json();
           cursor.current = j.cursor;
           apply(j.events);
         }
       } catch {}
-      if (!stop) timer = setTimeout(tick, document.hidden ? 8000 : POLL_MS);
-    };
-    void tick();
-    const presence = setInterval(() => void loadList(), 15000); // refresh online dots
+    });
+    const listDue = every(15_000);
+    const unsubscribe = subscribeRealtime("admin", event => {
+      if (event.scope === "sync") {
+        void loadList();
+        if (activeRef.current) void loadActive(activeRef.current);
+        void updates.refresh();
+      } else if (event.scope === "chat") void updates.refresh();
+      else if (event.scope === "presence") void loadList();
+      else if (event.scope === "poll") {
+        // Socket unavailable: fetch new events each tick, online dots every 15 s.
+        void updates.refresh();
+        if (listDue()) void loadList();
+      }
+    });
     return () => {
       stop = true;
-      clearTimeout(timer);
-      clearInterval(presence);
+      updates.stop();
+      unsubscribe();
     };
-  }, [apply, loadList]);
+  }, [apply, loadList, loadActive]);
 
   async function send() {
     const body = draft.trim();

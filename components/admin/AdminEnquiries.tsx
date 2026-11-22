@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { coalescedRefresh, every, subscribeRealtime } from "@/lib/realtime/client";
 import { CalendarDays, Eye, Mail, MessageCircle, Phone, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -87,8 +88,12 @@ export default function AdminEnquiries() {
   }, [load, q]);
 
   useEffect(() => {
-    const t = setInterval(load, 30000);
-    return () => clearInterval(t);
+    const updates = coalescedRefresh(load);
+    const pollDue = every(30_000);
+    const unsubscribe = subscribeRealtime("admin", event => {
+      if (event.scope === "enquiries" || event.scope === "sync" || (event.scope === "poll" && pollDue())) void updates.refresh();
+    });
+    return () => { updates.stop(); unsubscribe(); };
   }, [load]);
 
   async function patch(id: string, data: { status?: Status; adminNotes?: string }) {

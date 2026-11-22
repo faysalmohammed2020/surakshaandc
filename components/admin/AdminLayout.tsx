@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { coalescedRefresh, every, subscribeRealtime } from "@/lib/realtime/client";
 import AdminSidebar, {
   SIDEBAR_COLLAPSED,
   SIDEBAR_EXPANDED,
@@ -36,19 +37,19 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    let pending = false;
-    async function refreshCounts() {
-      if (document.hidden || pending || controller.signal.aborted) return;
-      pending = true;
+    let markNeeded = true;
+    const updates = coalescedRefresh(async () => {
+      if (document.hidden || controller.signal.aborted) return;
       try {
-        if (activeInbox) {
+        if (activeInbox && markNeeded) {
+          markNeeded = false;
           const marked = await fetch("/api/admin/sidebar-counts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ section: activeInbox }),
             signal: controller.signal,
           });
-          if (!marked.ok) return;
+          if (!marked.ok) { markNeeded = true; return; }
         }
         const response = await fetch("/api/admin/sidebar-counts", {
           cache: "no-store",
@@ -61,17 +62,29 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
         }
       } catch {
         // Keep the last successful totals during temporary network failures.
-      } finally {
-        pending = false;
       }
+    });
+    function refreshCounts() {
+      markNeeded = true;
+      void updates.refresh();
     }
-    void refreshCounts();
-    const interval = window.setInterval(refreshCounts, 30_000);
+    const pollDue = every(30_000);
+    const unsubscribe = subscribeRealtime("admin", event => {
+      // Only inbox activity changes the badges (analytics/blog/presence events don't).
+      if (event.scope === "poll") { if (pollDue()) refreshCounts(); return; }
+      if (event.scope !== "sync" && event.scope !== "chat" && event.scope !== "enquiries" && event.scope !== "counts") return;
+      if (event.scope === "sync" || (event.scope === "chat" && activeInbox === "liveChat") || (event.scope === "enquiries" && activeInbox === "enquiries")) {
+        markNeeded = true;
+      }
+      void updates.refresh();
+    });
+    refreshCounts();
     window.addEventListener("focus", refreshCounts);
     document.addEventListener("visibilitychange", refreshCounts);
     return () => {
       controller.abort();
-      window.clearInterval(interval);
+      updates.stop();
+      unsubscribe();
       window.removeEventListener("focus", refreshCounts);
       document.removeEventListener("visibilitychange", refreshCounts);
     };

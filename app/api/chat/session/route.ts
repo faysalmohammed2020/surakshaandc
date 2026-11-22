@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isSameOrigin } from "@/lib/security/same-origin";
 import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 
@@ -51,10 +52,6 @@ function setChatCookie(res: NextResponse, token: string) {
   return res;
 }
 
-function sameOrigin(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  return origin !== null && origin === new URL(request.url).origin;
-}
 
 /** The visitor's conversation (by cookie) and its recent history. */
 export async function GET(request: NextRequest) {
@@ -96,7 +93,7 @@ export async function GET(request: NextRequest) {
 
 /** Start a conversation: stores the visitor's details and sets the chat cookie. */
 export async function POST(request: NextRequest) {
-  if (!sameOrigin(request)) return NextResponse.json({ code: "INVALID_ORIGIN" }, { status: 403 });
+  if (!isSameOrigin(request)) return NextResponse.json({ code: "INVALID_ORIGIN" }, { status: 403 });
 
   const existing = await findConversationByToken(request.cookies.get(CHAT_COOKIE)?.value);
   if (existing) {

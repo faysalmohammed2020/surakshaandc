@@ -96,7 +96,7 @@ export async function GET(req: Request) {
       WHERE "ts" >= ${from} AND "ts" < ${to}
       GROUP BY "path"
       ORDER BY views DESC
-      LIMIT 20
+      LIMIT 500
     `);
 
     const topPagesOut = topPages.map((p) => {

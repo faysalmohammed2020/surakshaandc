@@ -437,8 +437,7 @@ model ChatTyping {
   @@map("chat_typing")
 }
 
-/// Admin heartbeat for the HTTP (polling) chat transport, used where the
-/// in-process WebSocket hub is unavailable (serverless hosts such as Vercel).
+/// Admin presence shared by the WebSocket heartbeat and authenticated chat APIs.
 model ChatAgentPresence {
   userId     String   @id @map("user_id")
   name       String?  @db.VarChar(120)

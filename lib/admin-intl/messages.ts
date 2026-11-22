@@ -21,6 +21,7 @@ export const adminMessages = {
       groups: { overview: "Overview", sales: "Inbox", content: "Content", people: "People" },
       items: {
         dashboard: { name: "Dashboard", description: "Website analytics and recent activity" },
+      live: "Live",
         liveChat: { name: "Live chat", description: "Talk to visitors on the website" },
         enquiries: { name: "Appointments", description: "Appointment requests and contact messages" },
         blog: { name: "Blog", description: "Write and manage blog posts" },
@@ -255,6 +256,13 @@ export const adminMessages = {
         low: "Low",
         sortedBy: "Sorted by views",
         empty: "No page views yet",
+        count: "{count} pages",
+        search: "Search pages…",
+        noMatch: "No pages match your search",
+        showing: "Showing {from}–{to} of {total}",
+        pagination: "Top pages pagination",
+        previous: "Previous page",
+        next: "Next page",
       },
       deviceTabs: { deviceType: "Device", browser: "Browser", os: "OS" },
       devices: {

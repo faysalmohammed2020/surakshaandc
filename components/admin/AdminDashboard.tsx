@@ -1,6 +1,7 @@
 "use client";
 import React, {
   useState,
+  useRef,
   useEffect,
   useMemo,
   useCallback,
@@ -21,6 +22,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import TopPagesTable from "./TopPagesTable";
+import { every, subscribeRealtime } from "@/lib/realtime/client";
 
 import {
   FaFileAlt,
@@ -254,8 +257,10 @@ const AdminDashboard: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [isLoadingBlogs, setIsLoadingBlogs] = useState<boolean>(true);
   const [errorBlogs, setErrorBlogs] = useState<string | null>(null);
+  // Bumped by WebSocket events (or fallback ticks); refetches quietly in the background.
   const [autoRefreshTick, setAutoRefreshTick] = useState(0);
-  const [autoRefreshing, setAutoRefreshing] = useState(false);
+  const [blogsTick, setBlogsTick] = useState(0);
+  const backgroundRefresh = useRef(false);
   const [lastAnalyticsUpdatedAt, setLastAnalyticsUpdatedAt] = useState<Date | null>(null);
   const [lastBlogsUpdatedAt, setLastBlogsUpdatedAt] = useState<Date | null>(null);
 
@@ -359,21 +364,37 @@ const AdminDashboard: React.FC = () => {
     return () => controller.abort();
   }, [fetchBlogs]);
 
-  // Auto refresh (analytics + blogs) every 30s
+  // Realtime: the server pushes "analytics" (throttled to ~3 s) and "blogs" events over
+  // the admin WebSocket. Without a socket (e.g. Vercel) fallback "poll" ticks refresh every 30 s.
   useEffect(() => {
-    const id = window.setInterval(() => {
-      setAutoRefreshing(true);
+    const pollDue = every(30_000);
+    const refreshAnalytics = () => {
+      if (document.hidden) return;
+      backgroundRefresh.current = true;
       setAutoRefreshTick((t) => t + 1);
-      window.setTimeout(() => setAutoRefreshing(false), 1200);
-    }, 30_000);
-    return () => window.clearInterval(id);
+    };
+    const unsubscribe = subscribeRealtime("admin", (event) => {
+      if (event.scope === "analytics") refreshAnalytics();
+      else if (event.scope === "blogs") setBlogsTick((t) => t + 1);
+      else if (event.scope === "sync" || (event.scope === "poll" && pollDue())) {
+        refreshAnalytics();
+        setBlogsTick((t) => t + 1);
+      }
+    });
+    // Catch up when the tab becomes visible again (events were skipped while hidden).
+    const onVisible = () => { if (!document.hidden) refreshAnalytics(); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      unsubscribe();
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, []);
 
   useEffect(() => {
     // Avoid double-fetch on initial mount (the first effect already loads).
-    if (autoRefreshTick === 0) return;
+    if (blogsTick === 0) return;
     void fetchBlogs().finally(() => setLastBlogsUpdatedAt(new Date()));
-  }, [autoRefreshTick, fetchBlogs]);
+  }, [blogsTick, fetchBlogs]);
 
   const recentBlogs = useMemo(() => blogs.slice(0, 5), [blogs]);
 
@@ -464,8 +485,13 @@ const AdminDashboard: React.FC = () => {
     const controller = new AbortController();
 
     const loadAnalytics = async () => {
-      setAnalyticsLoading(true);
-      setAnalyticsError(null);
+      // Realtime refreshes keep the current numbers on screen (no skeleton flash).
+      const silent = backgroundRefresh.current;
+      backgroundRefresh.current = false;
+      if (!silent) {
+        setAnalyticsLoading(true);
+        setAnalyticsError(null);
+      }
       try {
         const { from, to, bucket: resolvedBucket } = resolveRange();
         if (to <= from) {
@@ -512,11 +538,13 @@ const AdminDashboard: React.FC = () => {
       } catch (e) {
         if (isAbortError(e)) return;
         console.error(e);
-        setAnalyticsError(
-          e instanceof Error ? e.message : tr("range.loadFailed"),
-        );
+        if (!silent) {
+          setAnalyticsError(
+            e instanceof Error ? e.message : tr("range.loadFailed"),
+          );
+        }
       } finally {
-        setAnalyticsLoading(false);
+        if (!silent) setAnalyticsLoading(false);
       }
     };
 
@@ -566,7 +594,13 @@ const AdminDashboard: React.FC = () => {
               {tr("subtitle")}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              {autoRefreshing ? tr("refreshing") : " "}
+              <span className="inline-flex items-center gap-1.5 font-medium text-primary">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-50" />
+                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
+                </span>
+                {tr("live")}
+              </span>
               {lastAnalyticsUpdatedAt ? (
                 <span className="ms-2">
                   {tr("updatedBd", { time: formatBdTime(lastAnalyticsUpdatedAt) })}
@@ -926,122 +960,13 @@ const AdminDashboard: React.FC = () => {
                 )}
               </div>
 
-              {/* Top Pages Table */}
-              <div className="lg:col-span-2 bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-border bg-muted/20">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-base font-semibold text-foreground">
-                      {tr("topPages.title")}
-                    </h3>
-                    <span className="text-xs text-muted-foreground">
-                      {tr("topPages.sortedBy")}
-                    </span>
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/20 text-xs uppercase text-muted-foreground">
-                      <tr>
-                        <th className="px-6 py-4 text-start font-medium">
-                          {tr("topPages.path")}
-                        </th>
-                        <th className="px-6 py-4 text-start font-medium">
-                          {tr("topPages.views")}
-                        </th>
-                        <th className="px-6 py-4 text-start font-medium">
-                          {tr("topPages.avgActiveTime")}
-                        </th>
-                        <th className="px-6 py-4 text-start font-medium">
-                          {tr("topPages.engagement")}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200/60">
-                      {(analytics.topPages ?? []).length ? (
-                        analytics.topPages.map((p, index) => (
-                          <tr
-                            key={p.path}
-                            className="hover:bg-muted/20 transition-colors group"
-                          >
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-primary/10 text-foreground flex items-center justify-center text-xs font-bold">
-                                  {index + 1}
-                                </div>
-                                <span className="font-medium text-foreground truncate max-w-xs">
-                                  {p.path}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold text-foreground">
-                                  {numberFormatter.format(p.views)}
-                                </span>
-                                <div className="w-24 bg-gray-200 rounded-full h-2">
-                                  <div
-                                    className="bg-primary h-2 rounded-full"
-                                    style={{
-                                      width: `${Math.min(
-                                        100,
-                                        (p.views /
-                                          (analytics.topPages[0]?.views || 1)) *
-                                          100,
-                                      )}%`,
-                                    }}
-                                  ></div>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-ring text-white rounded-full">
-                                <div className="w-2 h-2 rounded-full bg-muted animate-pulse"></div>
-                                <span className="text-sm font-medium">
-                                  {fmtSec(p.avgActiveTimeSec)}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className={`w-3 h-3 rounded-full ${
-                                    p.avgActiveTimeSec > 120
-                                      ? "bg-green-500"
-                                      : p.avgActiveTimeSec > 60
-                                        ? "bg-yellow-500"
-                                        : "bg-red-500"
-                                  }`}
-                                ></div>
-                                <span className="text-sm text-gray-600">
-                                  {p.avgActiveTimeSec > 120
-                                    ? tr("topPages.high")
-                                    : p.avgActiveTimeSec > 60
-                                      ? tr("topPages.medium")
-                                      : tr("topPages.low")}
-                                </span>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={4}
-                            className="px-6 py-8 text-center text-muted-foreground"
-                          >
-                            <div className="flex flex-col items-center gap-2">
-                              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                                <FaFileAlt className="text-muted-foreground" />
-                              </div>
-                              <p>{tr("topPages.empty")}</p>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              {/* Top Pages Table (search + pagination) */}
+              <TopPagesTable
+                pages={analytics.topPages ?? []}
+                tr={tr}
+                fmtSec={fmtSec}
+                formatNumber={(n) => numberFormatter.format(n)}
+              />
             </div>
           ) : tab === "sources" ? (
             <div className="bg-card rounded-2xl p-5 border border-border shadow-sm">

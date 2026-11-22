@@ -3,9 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { CHAT_LIMITS, parseClientEvent } from "@/lib/chat/shared";
 import { identifyChatRequest } from "@/lib/chat/request-auth";
 import { adminFrame, adminPoll, visitorFrame, visitorPoll } from "@/lib/chat/http-transport";
+import { isSameOrigin } from "@/lib/security/same-origin";
 
 /**
- * HTTP chat transport for hosts without WebSockets (Vercel). See lib/chat/http-transport.ts.
+ * Authenticated chat writes and event catch-up. WebSocket notifications trigger
+ * GET requests immediately; clients do not poll this endpoint on a timer.
  *
  *   GET  /api/chat/poll[?as=admin][&since=<cursor>]  -> { events, cursor }
  *   POST /api/chat/poll[?as=admin]  body: client frame -> { events }
@@ -23,8 +25,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  if (!origin || origin !== new URL(request.url).origin) {
+  if (!isSameOrigin(request)) {
     return NextResponse.json({ code: "INVALID_ORIGIN" }, { status: 403, headers: noStore });
   }
   const who = await identifyChatRequest(request);

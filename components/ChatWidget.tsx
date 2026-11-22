@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { usePathname } from "next/navigation";
 import { CheckCheck, MessageCircle, Send, SmilePlus, X } from "lucide-react";
 import { useDict, useLocale } from "@/i18n/LocaleProvider";
+import { coalescedRefresh, every, subscribeRealtime } from "@/lib/realtime/client";
 import {
   CHAT_FLAG_COOKIE,
   CHAT_REACTIONS,
@@ -13,8 +14,6 @@ import {
   type VisitorConversationDTO,
 } from "@/lib/chat/shared";
 
-const POLL_OPEN_MS = 2500;
-const POLL_CLOSED_MS = 20000;
 
 const newId = () =>
   (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}${Math.random().toString(36).slice(2)}`).replace(/[^A-Za-z0-9_-]/g, "");
@@ -45,7 +44,8 @@ export function ChatWidget() {
   const [pickerFor, setPickerFor] = useState<string | null>(null);
 
   const openRef = useRef(open);
-  const cursor = useRef<string | null>(null);
+  const cursor = useRef<string | null>(new Date(Date.now() - 2500).toISOString());
+  const received = useRef(new Set<string>());
   const endRef = useRef<HTMLDivElement>(null);
   const typingSentAt = useRef(0);
   openRef.current = open;
@@ -58,6 +58,7 @@ export function ChatWidget() {
       if (j.conversation) {
         setConv(j.conversation);
         setMessages(j.messages ?? []);
+        for (const message of j.messages ?? []) received.current.add(message.id);
       } else if (j.prefill?.name) setForm((f) => ({ ...f, name: f.name || j.prefill.name, email: f.email || j.prefill.email }));
     } finally {
       setLoaded(true);
@@ -75,6 +76,8 @@ export function ChatWidget() {
   const apply = useCallback((events: ServerEvent[]) => {
     for (const ev of events) {
       if (ev.t === "message") {
+        if (received.current.has(ev.message.id)) continue;
+        received.current.add(ev.message.id);
         setMessages((m) => (m.some((x) => x.id === ev.message.id) ? m : [...m, ev.message]));
         if (openRef.current) void post("/api/chat/poll", { t: "read" });
         else setUnread((n) => n + 1);
@@ -88,30 +91,38 @@ export function ChatWidget() {
     }
   }, []);
 
-  // Poll while a conversation exists (fast when the panel is open).
+  // The socket signals changes for this visitor's conversation only.
   useEffect(() => {
     if (!conv) return;
     let stop = false;
-    let timer: ReturnType<typeof setTimeout>;
-    const tick = async () => {
+    const updates = coalescedRefresh(async () => {
       try {
         const url = `/api/chat/poll${cursor.current ? `?since=${encodeURIComponent(cursor.current)}` : ""}`;
         const res = await fetch(url, { cache: "no-store" });
-        if (res.ok) {
+        if (res.ok && !stop) {
           const j: PollResult = await res.json();
           cursor.current = j.cursor;
           setAgentOnline(j.agentOnline);
           apply(j.events);
         }
       } catch {}
-      if (!stop) timer = setTimeout(tick, openRef.current && !document.hidden ? POLL_OPEN_MS : POLL_CLOSED_MS);
-    };
-    void tick();
+    });
+    const closedDue = every(20_000);
+    const unsubscribe = subscribeRealtime("visitor", event => {
+      if (event.scope === "sync") {
+        void loadSession();
+        void updates.refresh();
+      } else if (event.scope === "chat") void updates.refresh();
+      // Socket unavailable: check every tick while the panel is open, every 20 s while closed.
+      else if (event.scope === "poll") { if (openRef.current || closedDue()) void updates.refresh(); }
+      else if (event.scope === "presence" && typeof event.online === "boolean") setAgentOnline(event.online);
+    });
     return () => {
       stop = true;
-      clearTimeout(timer);
+      updates.stop();
+      unsubscribe();
     };
-  }, [conv?.id, apply]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [conv?.id, apply, loadSession]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (open) {

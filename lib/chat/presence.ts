@@ -23,5 +23,5 @@ export function isVisitorOnline(conversationId: string): boolean {
 
 export const VISITOR_ONLINE_WINDOW_MS = ONLINE_MS;
 
-/** Reactions reach the other side through the polling transport, so there is nothing to push. */
+/** Updating reactionsUpdatedAt emits a transactional PostgreSQL notification. */
 export function broadcastReaction(_message: ChatMessageDTO) {}

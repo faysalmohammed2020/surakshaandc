@@ -4,6 +4,7 @@ import { reactionActor, reactToMessage } from "@/lib/chat/reactions";
 import { broadcastReaction } from "@/lib/chat/presence";
 import { isChatReaction, UUID_RE } from "@/lib/chat/shared";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { isSameOrigin } from "@/lib/security/same-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ const headers = { "Cache-Control": "private, no-store" };
 const error = (code: string, status: number) => NextResponse.json({ code }, { status, headers });
 
 export async function POST(request: NextRequest) {
-  if (request.headers.get("origin") !== request.nextUrl.origin) return error("FORBIDDEN", 403);
+  if (!isSameOrigin(request)) return error("FORBIDDEN", 403);
   const who = await identifyChatRequest(request);
   if (!who) return error("UNAUTHORIZED", 401);
   const actor = who.role === "admin" ? reactionActor("ADMIN", who.admin.userId) : reactionActor("VISITOR", who.conversation.id);
