@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarHeart, ChevronRight, Phone } from "lucide-react";
+import { ArrowRight, CalendarHeart, ChevronRight, Phone } from "lucide-react";
 import type { Block, Category, Service } from "@/data/types";
 import { site, telHref } from "@/lib/site";
 import { getDict } from "@/i18n";
 import { fmt, fmtNum, localePath, type Locale } from "@/i18n/config";
-import { Blob, Button, ImgFrame, categoryIcons, tones } from "./ui";
+import { ImgFrame, categoryIcons } from "./ui";
+import { Heart, Hearts, Loop, Rays, Wave } from "./decor";
 
 /* ---------- Page hero with breadcrumb ---------- */
 export function PageHero({
@@ -20,29 +21,24 @@ export function PageHero({
   crumbs: { label: string; href?: string }[];
 }) {
   return (
-    <section className="care-page-hero relative overflow-hidden bg-primary-50">
-      <div className="dot-grid absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
-      <Blob className="absolute -right-24 -top-24 h-80 w-80 text-secondary-100" />
-      <Blob className="absolute -bottom-32 -left-20 h-72 w-72 text-accent-100" />
-      <div className="container-x relative py-14 md:py-20">
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1 text-sm text-subtle">
+    <section className="care-page-hero">
+      <Hearts preset="hero" />
+      <Loop className="ph-loop" />
+      <Rays className="ph-rays" />
+      <div className="container-x ph-inner">
+        <nav aria-label="Breadcrumb" className="ph-crumbs">
           {crumbs.map((c, i) => (
-            <span key={i} className="flex items-center gap-1">
-              {c.href ? (
-                <Link href={c.href} className="hover:text-primary-700">
-                  {c.label}
-                </Link>
-              ) : (
-                <span className="text-ink">{c.label}</span>
-              )}
+            <span key={i}>
+              {c.href ? <Link href={c.href}>{c.label}</Link> : <span aria-current="page">{c.label}</span>}
               {i < crumbs.length - 1 && <ChevronRight className="h-3.5 w-3.5" />}
             </span>
           ))}
         </nav>
-        {eyebrow && <p lang={/[\u0980-\u09FF]/.test(eyebrow) ? "bn" : undefined} className="eyebrow mt-6">{eyebrow}</p>}
-        <h1 className="mt-3 max-w-3xl text-4xl font-extrabold text-ink sm:text-5xl">{title}</h1>
-        {sub && <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">{sub}</p>}
+        {eyebrow && <p lang={/[ঀ-৿]/.test(eyebrow) ? "bn" : undefined} className="ph-eyebrow">{eyebrow}</p>}
+        <h1>{title}</h1>
+        {sub && <p className="ph-sub">{sub}</p>}
       </div>
+      <Wave className="ph-wave" />
     </section>
   );
 }
@@ -51,35 +47,31 @@ export function PageHero({
 export function CategoryCard({ c, i, count, locale }: { c: Category; i: number; count: number; locale: Locale }) {
   const d = getDict(locale);
   const Icon = categoryIcons[c.slug];
-  const t = tones[i % tones.length];
   return (
-    <Link
-      href={localePath(locale, `/services/${c.slug}`)}
-      className={`care-category group relative flex flex-col overflow-hidden rounded-[var(--radius-blob)] border-2 border-transparent bg-card p-3 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift ${t.ring}`}
-    >
-      <div className="care-service-symbol"><Icon strokeWidth={1.4} aria-hidden="true" /><span>{fmt(d.cards.programmes, { n: fmtNum(locale, count) })}</span></div>
-      <div className="flex flex-1 flex-col px-3 pb-3 pt-5">
-        {locale === "en" && <p lang="bn" className="text-sm font-medium text-secondary-700">{c.nameBn}</p>}
-        <h3 className="mt-1 text-2xl font-bold text-ink">{c.name}</h3>
-        <p className="care-category-description mt-2 flex-1 leading-relaxed text-ink-soft">{c.description}</p>
-        <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-sm font-semibold">
-          <span className="text-subtle">{fmt(d.cards.programmes, { n: fmtNum(locale, count) })}</span>
-          <span className="flex items-center gap-1 text-primary-700">
-            {d.common.explore}
-          </span>
-        </div>
+    <Link href={localePath(locale, `/services/${c.slug}`)} className={`care-category t${i % 6}`}>
+      <div className="cc-top">
+        <span className="cc-icon">
+          <Icon strokeWidth={1.7} aria-hidden="true" />
+        </span>
+        <span className="hx-chip">{fmt(d.cards.programmes, { n: fmtNum(locale, count) })}</span>
       </div>
+      <p lang={locale === "en" ? "bn" : "en"} className="cc-alt">{c.nameBn}</p>
+      <h3>{c.name}</h3>
+      <p className="cc-desc">{c.description}</p>
+      <span className="cc-cta">
+        {d.common.explore} <ArrowRight className="h-4 w-4" />
+      </span>
+      <Heart className="cc-heart" />
     </Link>
   );
 }
 
 /* ---------- Service card ---------- */
 export function ServiceCard({ s, i = 0, locale }: { s: Service; i?: number; locale: Locale }) {
-  const t = tones[i % tones.length];
   return (
     <Link
       href={localePath(locale, `/services/${s.category}/${s.slug}`)}
-      className={`care-service-card group flex gap-4 rounded-3xl border-2 border-line bg-card p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft ${t.ring}`}
+      className={`care-service-card t${i % 6} group flex gap-4 p-3`}
     >
       <ImgFrame className="aspect-square w-24 shrink-0 rounded-2xl sm:w-28">
         {s.image && (
@@ -131,28 +123,22 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
 export function CtaBand({ locale }: { locale: Locale }) {
   const d = getDict(locale);
   return (
-    <section className="container-x mt-24">
-      <div className="care-cta relative overflow-hidden rounded-[2.5rem] bg-primary px-6 py-14 text-on-primary sm:px-12 md:py-16">
-        <Blob className="absolute -right-16 -top-20 h-72 w-72 text-white/10" />
-        <Blob className="absolute -bottom-28 right-1/4 h-56 w-56 text-accent/20" />
-        <div className="relative grid items-center gap-8 md:grid-cols-[1.4fr_1fr]">
+    <section className="container-x cta-wrap">
+      <div className="care-cta">
+        <Hearts preset="soft" />
+        <div className="cta-grid">
           <div>
-            <p lang="bn" className="font-medium opacity-80">{d.cta.eyebrow}</p>
-            <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">
-              {d.cta.title}
-            </h2>
-            <p className="mt-4 max-w-xl text-lg opacity-85">
-              {d.cta.text}
+            <p lang="bn" className="cta-eyebrow">
+              <Heart className="h-4 w-4" /> {d.cta.eyebrow}
             </p>
+            <h2>{d.cta.title}</h2>
+            <p className="cta-text">{d.cta.text}</p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row md:flex-col md:items-end">
-            <Button href={localePath(locale, "/appointment")} variant="accent" size="lg">
+          <div className="cta-actions">
+            <Link href={localePath(locale, "/appointment")} className="hx-btn hx-btn-sun">
               <CalendarHeart className="h-5 w-5" /> {d.cta.book}
-            </Button>
-            <a
-              href={telHref(site.phones[0])}
-              className="inline-flex h-13 items-center justify-center gap-2 rounded-full border-2 border-current/30 px-7 font-semibold transition hover:bg-white/10"
-            >
+            </Link>
+            <a href={telHref(site.phones[0])} className="hx-btn hx-btn-glass">
               <Phone className="h-4 w-4" /> {fmt(d.common.callPhone, { phone: site.phones[0] })}
             </a>
           </div>

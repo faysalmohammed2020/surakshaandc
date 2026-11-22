@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Building2, CheckCircle2, Eye, GraduationCap, Quote } from "lucide-react";
+import { Building2, CheckCircle2, GraduationCap, Quote } from "lucide-react";
+import { Brush, Heart } from "@/components/decor";
 import { CtaBand, PageHero } from "@/components/sections";
 import { ImgFrame, SectionHeading } from "@/components/ui";
 import { bilingual, facilities, site, teamRoles, therapies } from "@/lib/site";
@@ -23,6 +24,7 @@ export default async function AboutPage({ params }: P) {
   const d = getDict(locale);
   const a = d.about;
   const alt = locale === "en" ? "bn" : "en";
+  const text = (bangla: string, english: string) => (locale === "bn" ? bangla : english);
 
   const list = (items: { en: string; bn: string }[]) =>
     items.map((f) => {
@@ -80,10 +82,8 @@ export default async function AboutPage({ params }: P) {
           {teamRoles.map((r, i) => {
             const [primary, secondary] = bilingual(r, locale);
             return (
-              <div key={r.en} className="flex items-center gap-4 rounded-3xl border-2 border-line bg-white p-5">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary-100 font-display text-lg font-extrabold text-primary-700">
-                  {fmtNum(locale, i + 1).padStart(2, locale === "bn" ? "০" : "0")}
-                </span>
+              <div key={r.en} className={`ab-team-card t${i % 6}`}>
+                <span>{fmtNum(locale, i + 1).padStart(2, locale === "bn" ? "০" : "0")}</span>
                 <span>
                   <span className="block text-lg font-semibold text-ink">{primary}</span>
                   <span lang={alt} className="text-sm text-subtle">{secondary}</span>
@@ -110,18 +110,30 @@ export default async function AboutPage({ params }: P) {
         </div>
       </section>
 
-      {/* Vision */}
-      <section className="mt-28 bg-primary-900 py-20 text-white">
-        <div className="container-x grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+      {/* Vision & mission */}
+      <section className="container-x mt-28 text-center">
+        <p className="hx-book-eyebrow">{a.visionEyebrow}</p>
+        <h2 className="mt-1 text-4xl font-semibold text-[var(--c-sky)] sm:text-5xl">{a.visionTitle}</h2>
+        <div className="mx-auto mt-6 max-w-3xl space-y-4 text-[1.05rem] leading-[1.9] text-ink-soft">
+          {a.vision.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
+        <div className="ab-vm mt-16">
           <div>
-            <Eye className="h-10 w-10 text-accent" />
-            <p lang="bn" className="eyebrow mt-4 !text-accent">{a.visionEyebrow}</p>
-            <h2 className="mt-3 text-4xl font-bold">{a.visionTitle}</h2>
+            <h3>{text("ভিশন", "Vision")}</h3>
+            <Brush className="hx-brush purple" />
+            <p>{text("প্রতিটি বিশেষ চাহিদাসম্পন্ন শিশুকে বিকশিত হতে সক্ষম করে তোলা।", "To empower every child with special needs to thrive.")}</p>
           </div>
-          <div className="space-y-5 text-[1.07rem] leading-[1.9] text-white/80">
-            {a.vision.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
+          <div className="hx-book-hearts" aria-hidden>
+            <Heart className="h1" />
+            <Heart className="h2" />
+            <Heart className="h3" />
+          </div>
+          <div>
+            <h3>{text("মিশন", "Mission")}</h3>
+            <Brush className="hx-brush sky" />
+            <p>{text("কম খরচে মানসম্মত, বিজ্ঞানভিত্তিক থেরাপি ও শিক্ষা সেবা—পরিবারকে সাথে নিয়ে।", "Quality, evidence-based therapy and education at a low cost, together with every family.")}</p>
           </div>
         </div>
       </section>

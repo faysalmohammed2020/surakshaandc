@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import "@fontsource/hind-siliguri/400.css";
 import "@fontsource/hind-siliguri/500.css";
 import "@fontsource/hind-siliguri/600.css";
+import "@fontsource/baloo-da-2/500.css";
 import "@fontsource/baloo-da-2/600.css";
 import "@fontsource/baloo-da-2/700.css";
 import "@fontsource/baloo-da-2/800.css";
 import "../../globals.css";
+import "../../public-site.css";
 import { Header } from "@/components/Header";
 import { SiteMotion } from "@/components/SiteMotion";
 import { Footer } from "@/components/Footer";
@@ -48,7 +50,7 @@ export async function generateMetadata({ params }: Pick<P, "params">): Promise<M
   };
 }
 
-export const viewport: Viewport = { themeColor: "#0e7c86" };
+export const viewport: Viewport = { themeColor: "#2b1145" };
 
 export default async function RootLayout({ children, params }: P) {
   const { locale: raw } = await params;
