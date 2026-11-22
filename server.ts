@@ -4,7 +4,8 @@ import { attachRealtime } from "./lib/realtime/server";
 
 async function main() {
   const dev = process.argv.includes("--dev");
-  Object.assign(process.env, { NODE_ENV: dev ? "development" : "production" });
+  // SURAKSHA_REALTIME tells GET /api/realtime that this host serves WebSockets.
+  Object.assign(process.env, { NODE_ENV: dev ? "development" : "production", SURAKSHA_REALTIME: "1" });
   const port = Number(process.env.PORT || 3000);
   const hostname = process.env.HOST || "0.0.0.0";
   const { default: next } = await import("next");

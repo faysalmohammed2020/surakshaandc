@@ -203,7 +203,8 @@ export default function AdminChat() {
 
   async function react(m: ChatMessageDTO, emoji: string) {
     setPickerFor(null);
-    const res = await post("/api/chat/reactions", { conversationId: m.conversationId, messageId: m.id, emoji });
+    // ?as=admin: without it the server identifies the request by the visitor chat cookie.
+    const res = await post("/api/chat/reactions?as=admin", { conversationId: m.conversationId, messageId: m.id, emoji });
     if (res.ok) {
       const j = await res.json();
       setMessages((all) => all.map((x) => (x.id === j.message.id ? j.message : x)));

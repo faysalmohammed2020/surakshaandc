@@ -13,6 +13,19 @@ const FALLBACK_HIDDEN_MS = 15_000;
 const FALLBACK_AFTER_MS = 5000;
 
 /**
+ * Asks GET /api/realtime once per page load whether the host serves WebSockets.
+ * Vercel answers false, so we never open a socket there (no failed connections in the console).
+ */
+let support: Promise<boolean> | undefined;
+function websocketSupported() {
+  support ??= fetch("/api/realtime", { cache: "no-store" })
+    .then((r) => (r.ok ? r.json() : { websocket: false }))
+    .then((j: { websocket?: boolean }) => j.websocket === true)
+    .catch(() => false);
+  return support;
+}
+
+/**
  * Sidebar and admin pages share one socket, including across route changes.
  * The socket is the primary transport; "poll" ticks only run while it is unavailable.
  */
@@ -89,10 +102,14 @@ export function subscribeRealtime(role: "admin" | "visitor", listener: Handler) 
       window.removeEventListener("focus", connect);
       document.removeEventListener("visibilitychange", onVisibility);
     }
-    window.addEventListener("online", connect);
-    window.addEventListener("focus", connect);
     document.addEventListener("visibilitychange", onVisibility);
-    connect();
+    void websocketSupported().then((ok) => {
+      if (stopped) return;
+      if (!ok) { clearTimeout(firstWait); enterFallback(); return; } // e.g. Vercel: fallback only
+      window.addEventListener("online", connect);
+      window.addEventListener("focus", connect);
+      connect();
+    });
   }
   channel.listeners.add(listener);
   if (channel.socket?.readyState === WebSocket.OPEN) queueMicrotask(() => {
