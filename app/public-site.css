@@ -1058,6 +1058,15 @@ details[open] .hx-faq-a { animation: hx-rise 0.45s ease both; }
   .hx-hero-visual { max-width: 30rem; width: 100%; margin-inline: auto; }
   .hx-hero-badge { left: 0; }
   .hx-hero-loop { display: none; }
+  /* The big outline heart sits behind the headline on phones — move it to the right edge. */
+  .hx-hero .hearts-layer > span:first-child,
+  .care-page-hero .hearts-layer > span:first-child,
+  .au-panel .hearts-layer > span:first-child {
+    left: auto !important;
+    right: 3%;
+    top: 3% !important;
+    width: 3.4rem !important;
+  }
   .hx-aud { padding-top: 3.5rem; }
   .hx-aud-cards { grid-template-columns: 1fr; max-width: 26rem; margin-inline: auto; }
   .hx-aud-panel { margin-top: -6rem; padding-top: 9rem; padding-bottom: 3rem; border-radius: 2.2rem; }
