@@ -61,6 +61,12 @@
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+/* Unread items: red badge with white text (stays grey at 0). */
+.adm-count.has-new {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #fff;
+}
 .adm-count.is-collapsed {
   position: absolute;
   inset-block-start: 0;

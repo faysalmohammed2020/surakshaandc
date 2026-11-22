@@ -156,7 +156,7 @@ const AdminSidebar = ({
                       {countLabel !== undefined && (
                         <span
                           aria-hidden="true"
-                          className={`adm-count ${collapsed ? "is-collapsed" : ""}`}
+                          className={`adm-count ${collapsed ? "is-collapsed" : ""} ${(count ?? 0) > 0 ? "has-new" : ""}`}
                         >
                           {collapsed && (count ?? 0) > 99 ? `${number.format(99)}+` : countLabel}
                         </span>
