@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { assets } from "@/data/assets";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { PageHero } from "@/components/sections";
@@ -48,6 +50,7 @@ export default async function ContactPage({ params }: P) {
         title={c.heroTitle}
         eyebrow={c.heroEyebrow}
         sub={c.heroSub}
+        image={assets.frontDesk}
         crumbs={[{ label: d.common.breadcrumbHome, href: localePath(locale, "/") }, { label: d.common.breadcrumbContact }]}
       />
       <section className="container-x mt-14 grid gap-5 md:grid-cols-3">
@@ -63,6 +66,9 @@ export default async function ContactPage({ params }: P) {
       </section>
       <section className="container-x mt-10 grid gap-6 lg:grid-cols-2">
         <div className="rounded-[2.5rem] bg-white p-6 shadow-soft sm:p-10">
+          <div className="relative mb-7 aspect-[16/7] overflow-hidden rounded-[1.6rem]">
+            <Image src={assets.reception} alt="" fill sizes="(min-width:1024px) 40vw, 90vw" className="object-cover" />
+          </div>
           <h2 className="text-3xl font-bold text-ink">{c.sendTitle}</h2>
           <p className="mb-8 mt-2 text-ink-soft">{c.sendSub}</p>
           <EnquiryForm kind="contact" />

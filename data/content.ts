@@ -8,7 +8,7 @@ export const categories: Category[] = [
     "name": "Early Intervention",
     "nameBn": "আর্লি ইন্টারভেনশন",
     "description": "Personalised developmental programmes for children aged 0–6, built around play, family and a clear roadmap.",
-    "image": "https://www.surakshaandc.com/backend/img/fact/WLhr7fuudLLJQyGMsxB5.png",
+    "image": "/Assets/064f26fb01c4310e995a.jpg",
     "services": [
       "for-ages-0-6",
       "intensive-developmental-training",

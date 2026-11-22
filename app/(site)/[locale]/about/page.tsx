@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { assets } from "@/data/assets";
 import { Building2, CheckCircle2, GraduationCap, Quote } from "lucide-react";
 import { Brush, Heart } from "@/components/decor";
 import { CtaBand, PageHero } from "@/components/sections";
@@ -46,14 +47,15 @@ export default async function AboutPage({ params }: P) {
         title={a.heroTitle}
         eyebrow={a.heroEyebrow}
         sub={a.heroSub}
+        image={assets.familyGroup}
         crumbs={[{ label: d.common.breadcrumbHome, href: localePath(locale, "/") }, { label: d.common.breadcrumbAbout }]}
       />
 
       {/* Story */}
       <section className="container-x mt-20 grid gap-14 lg:grid-cols-[1fr_1.15fr]">
-        <div className="relative">
-          <ImgFrame className="aspect-[4/5] rounded-[2.5rem] shadow-lift lg:sticky lg:top-28">
-            <Image src={site.images.about} alt={a.imgAlt} fill sizes="(min-width:1024px) 40vw, 90vw" className="object-cover" />
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <ImgFrame className="aspect-[4/5] rounded-[2.5rem] shadow-lift">
+            <Image src={assets.classroomGreen} alt={a.imgAlt} fill sizes="(min-width:1024px) 40vw, 90vw" className="object-cover" />
           </ImgFrame>
         </div>
         <div>
@@ -78,6 +80,14 @@ export default async function AboutPage({ params }: P) {
       {/* Team */}
       <section id="team" className="container-x mt-28 scroll-mt-28">
         <SectionHeading eyebrow={a.teamEyebrow} title={a.teamTitle} sub={a.teamSub} />
+        <div className="ab-team-photos mt-10">
+          <div>
+            <Image src={assets.teamMeeting} alt="" fill sizes="(min-width:768px) 60vw, 100vw" className="object-cover" />
+          </div>
+          <div>
+            <Image src={assets.caseConference} alt="" fill sizes="(min-width:768px) 35vw, 100vw" className="object-cover" />
+          </div>
+        </div>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {teamRoles.map((r, i) => {
             const [primary, secondary] = bilingual(r, locale);
@@ -107,6 +117,29 @@ export default async function AboutPage({ params }: P) {
           <h2 className="mt-4 text-3xl font-bold text-ink">{a.therapyTitle}</h2>
           <p lang={alt} className="mt-2 text-ink-soft">{a.therapySub}</p>
           <ul className="mt-6 space-y-3">{list(therapies)}</ul>
+        </div>
+      </section>
+
+      {/* Inside the centre */}
+      <section className="container-x mt-28">
+        <SectionHeading
+          eyebrow={text("আমাদের সেন্টার", "Our centre")}
+          title={text("ভেতরে একবার ঘুরে আসুন", "Take a look inside")}
+          sub={text("উজ্জ্বল ক্লাসরুম, শান্ত সেন্সরি রুম আর খোলা খেলার জায়গা—শিশুর জন্য নিরাপদ ও আনন্দময় পরিবেশ।", "Bright classrooms, a calm sensory room and open space to play — safe, happy places to learn.")}
+        />
+        <div className="ab-rooms mt-12">
+          {[
+            [assets.classroomBlue, text("ক্লাসরুম", "Classroom")],
+            [assets.sensoryRoom, text("সেন্সরি রুম", "Sensory room")],
+            [assets.therapyRoom, text("থেরাপি রুম", "Therapy room")],
+            [assets.playground, text("খেলার মাঠ", "Outdoor play")],
+            [assets.reception, text("রিসেপশন", "Reception")],
+          ].map(([src, label], i) => (
+            <figure key={src} className={`t${i % 6}`}>
+              <Image src={src} alt={label} fill sizes="(min-width:1024px) 30vw, 50vw" className="object-cover" />
+              <figcaption>{label}</figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 

@@ -14,14 +14,17 @@ export function PageHero({
   sub,
   crumbs,
   eyebrow,
+  image,
 }: {
   title: string;
   sub?: string;
   eyebrow?: string;
   crumbs: { label: string; href?: string }[];
+  /** Optional photo shown in a ring of colourful arcs on the right (desktop/tablet). */
+  image?: string;
 }) {
   return (
-    <section className="care-page-hero">
+    <section className={`care-page-hero ${image ? "has-image" : ""}`}>
       <Hearts preset="hero" />
       <Loop className="ph-loop" />
       <Rays className="ph-rays" />
@@ -37,6 +40,19 @@ export function PageHero({
         {eyebrow && <p lang={/[ঀ-৿]/.test(eyebrow) ? "bn" : undefined} className="ph-eyebrow">{eyebrow}</p>}
         <h1>{title}</h1>
         {sub && <p className="ph-sub">{sub}</p>}
+        {image && (
+          <div className="ph-photo" aria-hidden>
+            <svg viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="94" pathLength={100} strokeDasharray="22 78" transform="rotate(200 100 100)" stroke="#ffc23d" />
+              <circle cx="100" cy="100" r="94" pathLength={100} strokeDasharray="12 88" transform="rotate(320 100 100)" stroke="#e8479a" />
+              <circle cx="100" cy="100" r="82" pathLength={100} strokeDasharray="18 82" transform="rotate(40 100 100)" stroke="#1fa8e0" />
+              <circle cx="100" cy="100" r="82" pathLength={100} strokeDasharray="10 90" transform="rotate(130 100 100)" stroke="#3fd29b" />
+            </svg>
+            <div>
+              <Image src={image} alt="" fill priority sizes="(min-width:1024px) 22rem, 40vw" className="object-cover" />
+            </div>
+          </div>
+        )}
       </div>
       <Wave className="ph-wave" />
     </section>

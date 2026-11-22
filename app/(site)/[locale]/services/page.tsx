@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { assets } from "@/data/assets";
 import { ArrowRight } from "lucide-react";
 import { CategoryCard, CtaBand, PageHero, ServiceCard } from "@/components/sections";
 import { categoryIcons } from "@/components/ui";
@@ -29,6 +30,7 @@ export default async function ServicesPage({ params }: P) {
         title={d.services.heroTitle}
         eyebrow={d.services.heroEyebrow}
         sub={d.services.heroSub}
+        image={assets.therapistsWithChild}
         crumbs={[{ label: d.common.breadcrumbHome, href: localePath(locale, "/") }, { label: d.common.breadcrumbServices }]}
       />
 

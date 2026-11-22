@@ -12,6 +12,7 @@ import { getContent } from "@/lib/content";
 import { getRecentBlogs } from "@/lib/blog";
 import { site, teamRoles } from "@/lib/site";
 import { getHomeCopy } from "@/data/home";
+import { assets } from "@/data/assets";
 import { getDict } from "@/i18n";
 import { fmt, fmtDate, fmtNum, hasLocale, localePath } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
@@ -24,9 +25,9 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   return { alternates: alternates(locale, "/") };
 }
 
-/** Remote category art is an icon, not a photo — use a local photo for the stack cards. */
+/** Stack-card photo overrides (category images are used elsewhere too). */
 const stackImages: Record<string, string> = {
-  "early-intervention": "/images/intensive%20developmental%20training.jpg",
+  "sensory-integration": assets.sensoryRoom,
 };
 
 export default async function HomePage({ params }: P) {

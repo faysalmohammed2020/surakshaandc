@@ -893,6 +893,18 @@ details[open] .hx-faq-a { animation: hx-rise 0.45s ease both; }
 }
 .public-site:lang(bn) .care-page-hero h1 { line-height: 1.35; }
 .ph-sub { margin-top: 1rem; max-width: 40rem; font-size: 1.12rem; line-height: 1.75; color: #e4d8f0; }
+.care-page-hero.has-image .ph-inner { min-height: 30rem; }
+.care-page-hero.has-image .ph-inner > :not(.ph-photo) { max-width: min(46rem, 58%); }
+.ph-photo {
+  position: absolute;
+  right: 2rem;
+  top: 2.2rem;
+  width: min(22rem, 30vw);
+  aspect-ratio: 1;
+  animation: pop-in 0.9s 0.1s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+.ph-photo svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke-width: 7; animation: spin 60s linear infinite; }
+.ph-photo > div { position: absolute; inset: 16%; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 6px #ffffff22, 0 30px 50px -24px #000; }
 .ph-loop { position: absolute; right: 6%; bottom: 3rem; width: 5.5rem; color: #c255d6; opacity: 0.7; }
 .ph-rays { position: absolute; right: 18%; top: 1.5rem; width: 4.5rem; color: var(--c-sun); opacity: 0.9; animation: hx-wiggle 4s ease-in-out infinite; }
 .ph-wave { position: absolute; left: 0; bottom: -1px; width: 100%; height: 4rem; color: var(--brand-surface); z-index: 2; }
@@ -964,6 +976,32 @@ details[open] .hx-faq-a { animation: hx-rise 0.45s ease both; }
 .ab-team-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.2rem; border-radius: 1.4rem; background: var(--tt); border: 1.5px solid color-mix(in oklab, var(--tc) 18%, transparent); transition: transform 0.3s; }
 .ab-team-card:hover { transform: translateY(-4px) rotate(-0.6deg); }
 .ab-team-card > span:first-child { display: grid; place-items: center; flex-shrink: 0; width: 3rem; height: 3rem; border-radius: 50%; background: var(--tc); color: #fff; font-family: var(--font-display); font-weight: 700; }
+
+.care-page-hero.has-image .ph-loop,
+.care-page-hero.has-image .ph-rays { display: none; }
+
+/* About: team photos + room strip */
+.ab-team-photos { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1rem; }
+.ab-team-photos > div { position: relative; aspect-ratio: 16 / 9; border-radius: 1.8rem; overflow: hidden; }
+.ab-team-photos > div:last-child { aspect-ratio: auto; }
+.ab-rooms { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 13rem; gap: 1rem; }
+.ab-rooms figure { position: relative; overflow: hidden; border-radius: 1.6rem; grid-column: span 2; }
+.ab-rooms figure:nth-child(1),
+.ab-rooms figure:nth-child(2) { grid-column: span 3; grid-row: span 2; }
+.ab-rooms img { transition: transform 0.7s; }
+.ab-rooms figure:hover img { transform: scale(1.06); }
+.ab-rooms figcaption {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.9rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 99px;
+  background: #fff;
+  color: var(--tc);
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 20px -10px #2b114580;
+}
 
 /* ---------- Reveal + keyframes ---------- */
 .reveal-ready { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -1056,6 +1094,11 @@ details[open] .hx-faq-a { animation: hx-rise 0.45s ease both; }
   .hx-book-hearts { height: 7rem; width: 10rem; margin-inline: auto; order: -1; }
   .hx-book-hearts .h2 { width: 4rem; }
   .ab-vm { grid-template-columns: 1fr; }
+  .ab-team-photos { grid-template-columns: 1fr; }
+  .ab-team-photos > div:last-child { aspect-ratio: 16 / 9; }
+  .ab-rooms { grid-template-columns: 1fr 1fr; grid-auto-rows: 9rem; }
+  .ab-rooms figure, .ab-rooms figure:nth-child(1), .ab-rooms figure:nth-child(2) { grid-column: span 1; grid-row: span 1; }
+  .ab-rooms figure:nth-child(1) { grid-column: span 2; grid-row: span 2; }
   .ab-vm .hx-book-hearts { display: none; }
 
   .public-site .site-footer { margin-top: 4.5rem; }
@@ -1063,6 +1106,9 @@ details[open] .hx-faq-a { animation: hx-rise 0.45s ease both; }
   .ft-grid { grid-template-columns: 1fr; gap: 2rem; padding-block: 2.4rem; }
   .ph-inner { padding-top: 2rem; padding-bottom: 5rem; }
   .ph-rays { display: none; }
+  .ph-photo { display: none; }
+  .care-page-hero.has-image .ph-inner { min-height: 0; }
+  .care-page-hero.has-image .ph-inner > :not(.ph-photo) { max-width: none; }
   .public-site .care-cta { padding: 2.2rem 1.5rem; border-radius: 1.8rem; }
   .cta-wrap { margin-top: 4rem; }
 }

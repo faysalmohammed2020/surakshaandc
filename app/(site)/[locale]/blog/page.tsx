@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { assets } from "@/data/assets";
 import { ArrowRight, Search } from "lucide-react";
 import { CtaBand, PageHero } from "@/components/sections";
 import { ImgFrame } from "@/components/ui";
@@ -60,6 +61,7 @@ export default async function BlogPage({ params, searchParams }: P) {
         title={d.blog.heroTitle}
         eyebrow={d.blog.heroEyebrow}
         sub={d.blog.heroSub}
+        image={assets.kidsClassroom}
         crumbs={[{ label: d.common.breadcrumbHome, href: localePath(locale, "/") }, { label: d.common.breadcrumbBlog }]}
       />
 

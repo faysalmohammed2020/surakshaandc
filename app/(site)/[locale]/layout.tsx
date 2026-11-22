@@ -66,7 +66,7 @@ export default async function RootLayout({ children, params }: P) {
   }));
 
   return (
-    <html lang={localeMeta[locale].htmlLang} suppressHydrationWarning>
+    <html lang={localeMeta[locale].htmlLang} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="public-site min-h-screen">
         <LocaleProvider locale={locale} dict={dict}>
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2">

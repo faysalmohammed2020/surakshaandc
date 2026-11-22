@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, CalendarHeart, HeartHandshake } from "lucide-react";
 import type { HomeCopy } from "@/data/home";
 import { Hearts, Loop, Rays, Wave } from "@/components/decor";
+import { assets } from "@/data/assets";
 
 export function Hero({ c, lp }: { c: HomeCopy["hero"]; lp: (h: string) => string }) {
   return (
@@ -30,7 +31,7 @@ export function Hero({ c, lp }: { c: HomeCopy["hero"]; lp: (h: string) => string
           <Rays className="hx-hero-rays" />
           <div className="hx-hero-blob">
             <Image
-              src="/images/therapeutictrategies.jpg"
+              src={assets.therapistBlocks}
               alt=""
               fill
               priority

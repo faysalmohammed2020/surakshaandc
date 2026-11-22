@@ -50,8 +50,8 @@ export default async function CategoryPage({ params }: P) {
         ]}
       />
       <section className="container-x mt-16 grid gap-10 lg:grid-cols-[0.9fr_1.4fr]">
-        <div>
-          <ImgFrame className="aspect-square rounded-[2.5rem] shadow-lift lg:sticky lg:top-28">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <ImgFrame className="aspect-square rounded-[2.5rem] shadow-lift">
             <Image src={c.image} alt={c.name} fill sizes="(min-width:1024px) 35vw, 90vw" className="object-cover" />
             <span className="absolute bottom-5 left-5 grid h-14 w-14 place-items-center rounded-2xl bg-white text-primary shadow-soft">
               <Icon className="h-7 w-7" />

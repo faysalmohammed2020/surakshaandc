@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { assets } from "@/data/assets";
 import { ClipboardCheck, Phone, PhoneCall, Smile } from "lucide-react";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { PageHero } from "@/components/sections";
@@ -42,6 +44,7 @@ export default async function AppointmentPage({ params, searchParams }: P) {
         title={a.heroTitle}
         eyebrow={a.heroEyebrow}
         sub={a.heroSub}
+        image={assets.consultation}
         crumbs={[{ label: d.common.breadcrumbHome, href: localePath(locale, "/") }, { label: d.common.breadcrumbAppointment }]}
       />
       <section className="container-x mt-14 grid gap-10 lg:grid-cols-[1.5fr_1fr]">
@@ -49,6 +52,9 @@ export default async function AppointmentPage({ params, searchParams }: P) {
           <EnquiryForm kind="appointment" services={opts} defaultService={service ?? ""} />
         </div>
         <aside className="space-y-6">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
+            <Image src={assets.therapistBlocks} alt="" fill sizes="(min-width:1024px) 30vw, 90vw" className="object-cover" />
+          </div>
           <div className="rounded-[2rem] bg-primary-50 p-7">
             <h2 className="text-2xl font-bold text-ink">{a.next}</h2>
             <ol className="mt-5 space-y-5">
