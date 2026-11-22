@@ -111,8 +111,7 @@ export function Footer({ locale }: { locale: Locale }) {
           <div className="container-x">
             <p>{fmt(d.footer.rights, { year: fmtNum(locale, year), name: d.site.fullName })}</p>
             <p>
-              {d.site.location} <Heart className="ft-mini-heart" />
-            </p>
+              {d.site.location}</p>
           </div>
         </div>
       </div>

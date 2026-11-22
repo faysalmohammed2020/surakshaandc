@@ -34,14 +34,7 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
   return (
     <div dir={dir} className="relative min-h-screen bg-background text-foreground">
       {/* Soft brand glow behind the content */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(60% 45% at 15% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%), radial-gradient(45% 40% at 100% 100%, color-mix(in oklab, var(--secondary) 10%, transparent), transparent 70%)",
-        }}
-      />
+      <div aria-hidden="true" className="adm-backdrop pointer-events-none fixed inset-0 z-0" />
 
       <div className="relative z-10 md:flex">
         {/* Desktop sidebar */}

@@ -1,0 +1,74 @@
+/* =====================================================================
+   Staff panel (/admin) — matches the public site's plum + crayon palette
+   ===================================================================== */
+.adm-backdrop {
+  background:
+    radial-gradient(55% 40% at 15% 0%, color-mix(in oklab, #7c4dcc 13%, transparent), transparent 70%),
+    radial-gradient(40% 35% at 100% 100%, color-mix(in oklab, #e8479a 9%, transparent), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3Cpath id='h' d='M12 21.2s-7.6-4.7-9.7-9.4C.8 8.4 2.7 4.4 6.5 4.4c2.1 0 3.8 1.2 4.7 2.8.9-1.6 2.6-2.8 4.7-2.8 3.8 0 5.7 4 4.2 7.4-2.1 4.7-9.6 9.4-9.6 9.4z'/%3E%3C/defs%3E%3Cuse href='%23h' transform='translate(1250 90) rotate(12) scale(6)' fill='none' stroke='%237c4dcc' stroke-opacity='.08' stroke-width='.4'/%3E%3Cuse href='%23h' transform='translate(1160 640) rotate(-8) scale(8)' fill='none' stroke='%231fa8e0' stroke-opacity='.08' stroke-width='.35'/%3E%3Cuse href='%23h' transform='translate(420 700) rotate(10) scale(3.5)' fill='%23ffc23d' fill-opacity='.1'/%3E%3C/svg%3E")
+      center / cover no-repeat;
+}
+.dark .adm-backdrop { opacity: 0.6; }
+
+/* Sidebar is always plum, in light and dark themes */
+.adm-sidebar {
+  color: #fff;
+  background:
+    radial-gradient(22rem 16rem at 0% 0%, #5a2a8a 0%, transparent 70%),
+    radial-gradient(18rem 14rem at 100% 100%, #4a1a5e 0%, transparent 70%),
+    #2b1145;
+  border-inline-end: 1px solid #ffffff12;
+  overflow: hidden;
+}
+.adm-brand::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7c4dcc, #e8479a, #f0603a, #ffc23d, #1fb488, #1fa8e0);
+}
+.adm-group { color: #ffffff70; }
+.adm-sidebar nav::-webkit-scrollbar { width: 6px; }
+.adm-sidebar nav::-webkit-scrollbar-thumb { background: #ffffff22; border-radius: 9px; }
+
+.adm-link { --ac: #b99cf0; color: #ffffffb3; transition: background 0.2s, color 0.2s; }
+.adm-link.c0 { --ac: #b99cf0; }
+.adm-link.c1 { --ac: #6fd0f5; }
+.adm-link.c2 { --ac: #ff9a7d; }
+.adm-link.c3 { --ac: #5fe0b4; }
+.adm-link.c4 { --ac: #ff8cc6; }
+.adm-link.c5 { --ac: #ffd36b; }
+.adm-ic {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.65rem;
+  color: var(--ac);
+  background: #ffffff0d;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.adm-link:hover { background: #ffffff0f; color: #fff; }
+.adm-link:hover .adm-ic { transform: scale(1.06); }
+.adm-link.is-active { background: #ffffff1a; color: #fff; box-shadow: inset 0 0 0 1px #ffffff1a; }
+.adm-link.is-active .adm-ic { background: var(--ac); color: #2b1145; }
+.adm-link.is-active::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.55rem;
+  inset-inline-start: -0.75rem;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--ac);
+}
+.adm-side-heart { position: absolute; right: -1.4rem; bottom: 3.2rem; width: 6rem; color: #e8479a; opacity: 0.14; pointer-events: none; }
+
+.adm-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: linear-gradient(90deg, #7c4dcc, #e8479a, #f0603a, #ffc23d, #1fb488, #1fa8e0);
+  opacity: 0.7;
+}

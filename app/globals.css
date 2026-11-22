@@ -8,11 +8,11 @@
    automatically, so any color you put here will fit.
    ===================================================================== */
 :root {
-  --brand-primary: #0e7c86; /* main brand color: buttons, links, headings accents */
-  --brand-secondary: #e5692e; /* warm support color: highlights, badges, icons */
-  --brand-accent: #f6c445; /* playful pop: small details, underlines, stars */
-  --brand-ink: #13293d; /* main text color */
-  --brand-surface: #fffaf3; /* page background */
+  --brand-primary: #7c4dcc; /* main brand color: buttons, links, headings accents */
+  --brand-secondary: #f0603a; /* warm support color: highlights, badges, icons */
+  --brand-accent: #ffc23d; /* playful pop: small details, underlines, stars */
+  --brand-ink: #2a1d3f; /* main text color */
+  --brand-surface: #fffaf4; /* page background */
 }
 
 /* ---------------------------------------------------------------------
@@ -253,7 +253,7 @@
    Public pages never use these names, so nothing here changes the site.
    --------------------------------------------------------------------- */
 :root {
-  --background: #f6f8f9;
+  --background: #f8f5fc;
   --foreground: var(--brand-ink);
   --card-foreground: var(--brand-ink);
   --popover: #ffffff;
@@ -269,15 +269,15 @@
   --destructive: #d92d20;
 }
 .dark {
-  --background: #0d1620;
-  --foreground: #e8eef3;
-  --card-foreground: #e8eef3;
-  --popover: #15212d;
-  --popover-foreground: #e8eef3;
-  --muted: #1b2937;
-  --muted-foreground: #9db0c0;
-  --border: #243546;
-  --input: #2b3f52;
+  --background: #140a21;
+  --foreground: #efe8f7;
+  --card-foreground: #efe8f7;
+  --popover: #1f1232;
+  --popover-foreground: #efe8f7;
+  --muted: #2a1a40;
+  --muted-foreground: #b3a3c9;
+  --border: #35234d;
+  --input: #3f2a5c;
   --ring: color-mix(in oklab, var(--brand-primary) 70%, white);
   --destructive: #f0584b;
 }
@@ -303,13 +303,9 @@
 
 /* Cards in the panel follow the theme (public cards stay white). */
 .dark .bg-card {
-  background-color: #121e29;
+  background-color: #1c1030;
 }
 
 @utility btn-gradient {
-  background-image: linear-gradient(
-    135deg,
-    var(--brand-primary),
-    color-mix(in oklab, var(--brand-primary) 70%, var(--brand-secondary))
-  );
+  background-image: linear-gradient(135deg, #7c4dcc, #a14fd0 55%, #e8479a);
 }

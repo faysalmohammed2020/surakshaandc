@@ -26,9 +26,12 @@ function LangSwitch({ className = "" }: { className?: string }) {
   const locale = useLocale();
   const d = useDict();
   const other = locales.find((l) => l !== locale) ?? defaultLocale;
+  const path = stripLocale(pathname);
+  // Staff pages (/auth, /admin) have no Bangla version — switch to the Bangla home instead.
+  const target = /^\/(auth|admin)(\/|$)/.test(path) ? "/" : path;
   return (
     <Link
-      href={localePath(other, stripLocale(pathname))}
+      href={localePath(other, target)}
       hrefLang={other}
       lang={other}
       prefetch={false}

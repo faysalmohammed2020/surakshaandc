@@ -104,7 +104,7 @@ export const en = {
   cards: { programmes: "{n} programmes" },
 
   cta: {
-    eyebrow: "আপনার শিশুর জন্য প্রথম পদক্ষেপ নিন",
+    eyebrow: "Take the first step for your child",
     title: "Not sure where to start? Book a developmental assessment.",
     text: "Our multidisciplinary team will understand your child’s strengths and needs, then build a plan with you.",
     book: "Book an Appointment",
@@ -122,10 +122,10 @@ export const en = {
     oneToOne: "1 : 1",
     oneToOneLabel: "therapy sessions",
     stats: [
-      ["Therapy programmes", "থেরাপি প্রোগ্রাম"],
-      ["Specialised services", "বিশেষায়িত সেবা"],
-      ["Specialist disciplines", "বিশেষজ্ঞ বিভাগ"],
-      ["Years of paediatric care", "বছরের অভিজ্ঞতা"],
+      ["Therapy programmes", "Therapy programmes"],
+      ["Specialised services", "Specialised services"],
+      ["Specialist disciplines", "Specialist disciplines"],
+      ["Years of paediatric care", "Years of paediatric care"],
     ],
     servicesEyebrow: "Top special services",
     servicesTitleA: "Therapies built around ",
@@ -133,8 +133,8 @@ export const en = {
     servicesSub: "Six connected programmes, delivered by one multidisciplinary team under one roof.",
     viewAll: "View all {n} services",
     whyImgAlt: "Inside Suraksha centre",
-    quote: "“কম খরচে মান সম্মত সেবা প্রদানে আমরা প্রতিশ্রুতিবদ্ধ।”",
-    whyEyebrow: "কেন সুরক্ষা নির্বাচন করবেন?",
+    quote: "“We are committed to quality care at an affordable cost.”",
+    whyEyebrow: "Why choose Suraksha?",
     whyTitle: "Why families choose Suraksha",
     journeyEyebrow: "How it works",
     journeyTitle: "Your child’s journey with us",
@@ -148,7 +148,7 @@ export const en = {
     ],
     teamEyebrow: "Multidisciplinary team",
     teamTitle: "Nine specialists, one plan for your child",
-    therapiesEyebrow: "থেরাপি সেবা সমূহ",
+    therapiesEyebrow: "Therapy services",
     therapiesTitle: "Therapies available at the centre",
     founderLabel: "Founder",
     founderLine: "{role} — caring for children for {n} years.",
@@ -166,17 +166,17 @@ export const en = {
     heroTitle: "A safe place for every child to grow",
     heroEyebrow: "About Suraksha",
     heroSub: "A service-driven centre for children with special needs — therapy, schooling and parent support under one roof.",
-    storyEyebrow: "Our story · আমাদের কথা",
+    storyEyebrow: "Our story",
     imgAlt: "Suraksha centre",
     founderLine: "{role} · {n} years caring for children",
-    teamEyebrow: "মাল্টিডিসিপ্লিনারি টিম",
+    teamEyebrow: "Multidisciplinary team",
     teamTitle: "Our multidisciplinary team",
     teamSub: "Experienced members of our team work together on every child’s plan.",
     facilitiesTitle: "Services & facilities",
-    facilitiesSub: "এই সেন্টারে বিশেষ চাহিদা সম্পন্ন একটি শিশুর প্রয়োজনীয় সকল প্রকার সেবা পাওয়া যাবে।",
+    facilitiesSub: "Every service a child with special needs requires, all under one roof.",
     therapyTitle: "Therapy services",
-    therapySub: "থেরাপি সেবা সমূহ",
-    visionEyebrow: "ভিশন · Vision",
+    therapySub: "Seven therapies to support every child.",
+    visionEyebrow: "Vision",
     visionTitle: "Quality care that families can afford",
     // The story and vision are written in Bangla by the founder; an English version is provided for the English site.
     story: [
@@ -225,7 +225,7 @@ export const en = {
 
   appointment: {
     heroTitle: "Admission & appointment",
-    heroEyebrow: "অ্যাপয়েন্টমেন্ট",
+    heroEyebrow: "Appointment",
     heroSub: "Fill in the form and our team will call you to confirm. Prefer to talk? Call us any time.",
     next: "What happens next",
     steps: [
@@ -238,7 +238,7 @@ export const en = {
 
   contact: {
     heroTitle: "We are ready to help",
-    heroEyebrow: "Contact us · যোগাযোগ",
+    heroEyebrow: "Contact us",
     heroSub: "Questions about therapy, admission or fees? Send us a message or give us a call.",
     visit: "Visit us",
     call: "Call us",
@@ -248,15 +248,15 @@ export const en = {
   },
 
   form: {
-    thanks: "Thank you! ধন্যবাদ!",
+    thanks: "Thank you!",
     doneAppointment: "We have received your request. Our team will call you shortly to confirm the appointment.",
     doneContact: "We have received your message and will get back to you soon.",
     parentName: "Parent / guardian name *",
-    parentNamePh: "অভিভাবকের নাম",
+    parentNamePh: "Parent’s name",
     phone: "Phone *",
     phonePh: "01XXXXXXXXX",
     childName: "Child’s name *",
-    childNamePh: "শিশুর নাম",
+    childNamePh: "Child’s name",
     childAge: "Child’s age *",
     childAgePh: "e.g. 3 years 4 months",
     service: "Service needed",
@@ -268,7 +268,7 @@ export const en = {
     email: "Email",
     messageAppointment: "Tell us about your child (optional)",
     messageContact: "Message *",
-    messagePh: "সংক্ষেপে লিখুন…",
+    messagePh: "Write briefly…",
     submitAppointment: "Request Appointment",
     submitContact: "Send Message",
     genericError: "Something went wrong",
@@ -306,7 +306,7 @@ export const en = {
 
   notFound: {
     title: "This page wandered off",
-    text: "পৃষ্ঠাটি খুঁজে পাওয়া যায়নি। Let’s get you back on track.",
+    text: "We couldn’t find that page. Let’s get you back on track.",
     home: "Go home",
     services: "Our services",
   },

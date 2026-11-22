@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { AlertCircle, ArrowRight, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { AuthShell } from "@/components/auth/AuthShell";
+import { assets } from "@/data/assets";
 
 export default function SignUp() {
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -51,90 +55,100 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <main className="flex min-h-screen items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-sm">
-          <h2 className="text-2xl font-bold text-center mb-6">
-            Create Account
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-foreground"
-              >
-                Name (optional)
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={form.name}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-foreground"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={form.email}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-foreground"
-              >
-                Password (min 8 chars)
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                minLength={8}
-                maxLength={72}
-                value={form.password}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              />
-            </div>
-
-            {error && (
-              <div className="text-destructive text-sm text-center">{error}</div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-md btn-gradient px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
-            >
-              {loading ? "Creating..." : "Sign Up"}
-            </button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link href="/auth/signin" className="text-primary hover:underline">
-              Sign in
-            </Link>
-          </p>
+    <AuthShell
+      badge="Join the team"
+      title="Create account"
+      sub="Set up your staff account. An admin will give you access to the panel."
+      panelTitle="Little steps. Beautiful possibilities."
+      panelPoints={["One plan for every child", "Families at every step", "A caring, connected team"]}
+      image={assets.teamMeeting}
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link href="/auth/signin" className="au-link">
+            Sign in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="au-fields">
+        <div>
+          <label htmlFor="name">
+            Name <span className="au-opt">(optional)</span>
+          </label>
+          <div className="au-input">
+            <User className="au-icon" />
+            <input id="name" name="name" type="text" autoComplete="name" value={form.name} onChange={handleChange} placeholder="Your name" />
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div>
+          <label htmlFor="email">Email address</label>
+          <div className="au-input">
+            <Mail className="au-icon" />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="you@surakshaandc.com"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="password">
+            Password <span className="au-opt">(min 8 characters)</span>
+          </label>
+          <div className="au-input">
+            <Lock className="au-icon" />
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              required
+              minLength={8}
+              maxLength={72}
+              autoComplete="new-password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="au-eye"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {error && (
+          <div className="au-alert err">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        <button type="submit" disabled={loading} className="au-submit">
+          {loading ? (
+            <>
+              <span className="au-spin" />
+              Creating...
+            </>
+          ) : (
+            <>
+              Sign up
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
+        </button>
+      </form>
+    </AuthShell>
   );
 }

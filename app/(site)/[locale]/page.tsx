@@ -87,7 +87,7 @@ export default async function HomePage({ params }: P) {
       <Audience
         c={h.audience}
         values={[categories.length, services.length, teamRoles.length, site.founder.years]}
-        fmt={num}
+        locale={locale}
         lp={lp}
       />
       <ServiceStack items={stackItems} copy={h.stack} />

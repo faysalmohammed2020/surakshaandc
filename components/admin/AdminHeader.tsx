@@ -49,7 +49,7 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
   const Icon = page.icon;
 
   return (
-    <header dir={dir} className="sticky top-0 z-30 border-b border-border bg-card/85 backdrop-blur-xl">
+    <header dir={dir} className="adm-header sticky top-0 z-30 border-b border-border bg-card/85 backdrop-blur-xl">
       <div className="flex h-16 items-center justify-between gap-3 px-4 md:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <button
@@ -61,11 +61,11 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
             <Menu size={20} />
           </button>
 
-          <span className="hidden size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary sm:flex">
+          <span className="hidden size-10 shrink-0 items-center justify-center rounded-xl btn-gradient text-white shadow-[0_10px_20px_-12px_#7c4dcc] sm:flex">
             <Icon size={19} />
           </span>
           <div className="min-w-0 leading-tight">
-            <p className="truncate text-sm font-bold text-foreground">
+            <p className="truncate font-display text-base font-bold text-foreground">
               {t(`nav.items.${page.key}.name`)}
             </p>
             <p className="hidden truncate text-xs text-muted-foreground sm:block">
@@ -78,7 +78,7 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
           <Link
             href="/"
             target="_blank"
-            className="hidden items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:flex"
+            className="hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-primary transition-colors hover:border-primary hover:bg-primary/10 sm:flex"
           >
             <ExternalLink size={15} />
             {t("shell.viewSite")}
@@ -94,7 +94,7 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
                 className="size-9 rounded-xl object-cover"
               />
             ) : (
-              <span className="flex size-9 items-center justify-center rounded-xl btn-gradient text-xs font-bold text-white">
+              <span className="flex size-9 items-center justify-center rounded-full btn-gradient text-xs font-bold text-white">
                 {initials(user?.name)}
               </span>
             )}

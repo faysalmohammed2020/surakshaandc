@@ -6,6 +6,7 @@ import "@fontsource/baloo-da-2/600.css";
 import "@fontsource/baloo-da-2/700.css";
 import "@fontsource/baloo-da-2/800.css";
 import "../globals.css";
+import "../admin-panel.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 /** Root layout for the staff panel (/admin and /auth). The public site has its own in (site)/[locale]. */

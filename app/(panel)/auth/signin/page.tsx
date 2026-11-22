@@ -3,22 +3,9 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
-import {
-  ArrowRight,
-  Sparkles,
-  Star,
-  Users,
-  Calendar,
-  Check,
-  Clock,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  AlertCircle,
-} from "lucide-react";
+import { AlertCircle, ArrowRight, Check, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { AuthShell } from "@/components/auth/AuthShell";
 
 function sanitizeCallbackUrl(value: string | null | undefined, fallback = "/admin") {
   const candidate = value?.trim();
@@ -82,137 +69,93 @@ function SignInForm() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[linear-gradient(180deg,_#fff_0%,_#faf5ff_18%,_#ffffff_100%)] font-sans">
-      {/* Decorative elements */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_15%_12%,rgba(147,51,234,0.08),transparent_25%),radial-gradient(circle_at_85%_15%,rgba(168,85,247,0.06),transparent_24%)]" />
-      
-      <div className="flex min-h-screen items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="mb-8 text-center">
-            <Image
-              src="/adon_erp_logo.png"
-              alt="Adon ERP logo"
-              width={288}
-              height={160}
-              className="mx-auto h-20 w-auto"
-              priority
+    <AuthShell
+      badge="Welcome back"
+      title="Sign in"
+      sub="Sign in to manage appointments, enquiries, chat and blog posts."
+      panelTitle="Every child shines in their own colour"
+      panelPoints={["Appointment & enquiry tracking", "Live chat with families", "Blog & news publishing"]}
+      footer={
+        <>
+          Don&apos;t have an account?{" "}
+          <Link href="/auth/signup" className="au-link">
+            Sign up
+          </Link>
+        </>
+      }
+    >
+      {message && (
+        <div className="au-alert ok">
+          <Check className="h-4 w-4 shrink-0" />
+          {message}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="au-fields">
+        <div>
+          <label htmlFor="email">Email address</label>
+          <div className="au-input">
+            <Mail className="au-icon" />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="you@surakshaandc.com"
             />
-            <p className="mt-2 text-sm text-slate-500">Sign in to your account</p>
-          </div>
-
-          {/* Card */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 shadow-sm ring-1 ring-purple-100">
-                <Sparkles className="h-4 w-4" />
-                Welcome Back
-              </div>
-              <h2 className="mt-4 text-2xl font-bold text-slate-900">Sign In</h2>
-            </div>
-
-            {message && (
-              <div className="mb-4 flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700">
-                <Check className="h-4 w-4" />
-                {message}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-                  Email Address
-                </label>
-                <div className="relative mt-1">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="admin@adon-erp.com"
-                    className="block w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 py-2.5 text-sm outline-none transition focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700">
-                  Password
-                </label>
-                <div className="relative mt-1">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="block w-full rounded-xl border border-slate-200 bg-white pl-10 pr-10 py-2.5 text-sm outline-none transition focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {error && (
-                <div className="flex items-center gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                  <AlertCircle className="h-4 w-4" />
-                  {error}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl btn-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-700/20 transition hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
-              >
-                {loading ? (
-                  <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    Signing in...
-                  </>
-                ) : (
-                  <>
-                    Sign In
-                    <ArrowRight className="h-4 w-4" />
-                  </>
-                )}
-              </button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-slate-500">
-                Don't have an account?{" "}
-                <Link href="/auth/signup" className="font-semibold text-purple-700 hover:underline">
-                  Sign up
-                </Link>
-              </p>
-            </div>
-          </div>
-
-          {/* Trust Badge */}
-          <div className="mt-6 text-center">
-            <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
-              <span>Secure login</span>
-              <span>•</span>
-              <span>Encrypted connection</span>
-              <span>•</span>
-              <span>Privacy protected</span>
-            </div>
           </div>
         </div>
-      </div>
-    </main>
+
+        <div>
+          <label htmlFor="password">Password</label>
+          <div className="au-input">
+            <Lock className="au-icon" />
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              required
+              autoComplete="current-password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="au-eye"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {error && (
+          <div className="au-alert err">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        <button type="submit" disabled={loading} className="au-submit">
+          {loading ? (
+            <>
+              <span className="au-spin" />
+              Signing in...
+            </>
+          ) : (
+            <>
+              Sign in
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
+        </button>
+      </form>
+    </AuthShell>
   );
 }
 export default function SignInPage() {

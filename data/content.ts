@@ -33,7 +33,7 @@ export const categories: Category[] = [
     "slug": "behaviour-therapy",
     "oldSlug": "consultation",
     "name": "Behaviour Therapy (ABA-Based)",
-    "nameBn": "বিহেভিয়ার থেরাপি (ABA)",
+    "nameBn": "বিহেভিয়ার থেরাপি (এবিএ)",
     "description": "Evidence-based ABA support for positive behaviour, social skills, focus and emotional regulation.",
     "image": "/images/behaviourtherapy.png",
     "services": [

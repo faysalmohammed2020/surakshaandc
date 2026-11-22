@@ -31,6 +31,11 @@ export function fmtNum(locale: Locale, n: number): string {
   return new Intl.NumberFormat(localeMeta[locale].intl, { useGrouping: false }).format(n);
 }
 
+/** Shows ASCII digits in the page language (Bangla: ০-৯). Use for display only, never in tel: links. */
+export function digits(locale: Locale, s: string): string {
+  return locale === "bn" ? s.replace(/[0-9]/g, (d) => "০১২৩৪৫৬৭৮৯"[+d]) : s;
+}
+
 /** Replaces {placeholders} in a dictionary string. */
 export function fmt(s: string, vars: Record<string, string | number>): string {
   return s.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? `{${k}}`));

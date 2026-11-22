@@ -3,18 +3,20 @@ import Link from "next/link";
 import { Award, HandHeart, Puzzle, UsersRound } from "lucide-react";
 import type { HomeCopy } from "@/data/home";
 import { Heart } from "@/components/decor";
+import type { Locale } from "@/i18n/config";
+import { CountUp } from "./CountUp";
 
 const statIcons = [Puzzle, HandHeart, UsersRound, Award];
 
 export function Audience({
   c,
   values,
-  fmt,
+  locale,
   lp,
 }: {
   c: HomeCopy["audience"];
   values: number[];
-  fmt: (n: number) => string;
+  locale: Locale;
   lp: (h: string) => string;
 }) {
   return (
@@ -47,10 +49,9 @@ export function Audience({
                 <Icon strokeWidth={1.5} />
                 <div>
                   <strong>
-                    {fmt(values[i])}
-                    {i === 3 ? "+" : ""}
+                    <CountUp to={values[i]} locale={locale} suffix={i === 3 ? "+" : ""} duration={1600 + i * 250} />
                   </strong>
-                  <span>{label}</span>
+                  <span className="hx-stat-label">{label}</span>
                 </div>
               </div>
             );
