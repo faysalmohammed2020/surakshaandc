@@ -78,8 +78,19 @@ model User {
   analyticsEvents   AnalyticsEvent[]
   chatConversations ChatConversation[]
   chatMessages      ChatMessage[]
+  inboxSeen         AdminInboxSeen?
 
   @@map("users")
+}
+
+/// Sidebar notification watermarks, independent of individual chat read receipts.
+model AdminInboxSeen {
+  userId          String    @id @map("user_id")
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatSeenAt      DateTime? @map("chat_seen_at") @db.Timestamptz(3)
+  enquiriesSeenAt DateTime? @map("enquiries_seen_at") @db.Timestamptz(3)
+
+  @@map("admin_inbox_seen")
 }
 
 model Account {

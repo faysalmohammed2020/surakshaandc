@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useMemo, useState, type ReactNode } from "react";
+import React, { useEffect, useMemo, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import AdminSidebar, {
   SIDEBAR_COLLAPSED,
   SIDEBAR_EXPANDED,
+  type SidebarCounts,
 } from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,12 +26,63 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
   const dir = useLocale() === "ar" ? "rtl" : "ltr";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [counts, setCounts] = useState<SidebarCounts>();
+  const pathname = usePathname();
+  const activeInbox = pathname === "/admin/chat" || pathname.startsWith("/admin/chat/")
+    ? "liveChat"
+    : pathname === "/admin/enquiries" || pathname.startsWith("/admin/enquiries/")
+      ? "enquiries"
+      : undefined;
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let pending = false;
+    async function refreshCounts() {
+      if (document.hidden || pending || controller.signal.aborted) return;
+      pending = true;
+      try {
+        if (activeInbox) {
+          const marked = await fetch("/api/admin/sidebar-counts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ section: activeInbox }),
+            signal: controller.signal,
+          });
+          if (!marked.ok) return;
+        }
+        const response = await fetch("/api/admin/sidebar-counts", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+        const data = await response.json();
+        if (Number.isSafeInteger(data.liveChat) && data.liveChat >= 0 && Number.isSafeInteger(data.enquiries) && data.enquiries >= 0 && !controller.signal.aborted) {
+          setCounts({ liveChat: data.liveChat, enquiries: data.enquiries });
+        }
+      } catch {
+        // Keep the last successful totals during temporary network failures.
+      } finally {
+        pending = false;
+      }
+    }
+    void refreshCounts();
+    const interval = window.setInterval(refreshCounts, 30_000);
+    window.addEventListener("focus", refreshCounts);
+    document.addEventListener("visibilitychange", refreshCounts);
+    return () => {
+      controller.abort();
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshCounts);
+      document.removeEventListener("visibilitychange", refreshCounts);
+    };
+  }, [pathname, activeInbox]);
 
   // Sidebar is flush with the left edge; content starts right after it.
   const contentOffset = useMemo(
     () => (sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_EXPANDED),
     [sidebarCollapsed],
   );
+  const visibleCounts = counts && activeInbox ? { ...counts, [activeInbox]: 0 } : counts;
 
   return (
     <div dir={dir} className="relative min-h-screen bg-background text-foreground">
@@ -40,6 +93,7 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
         {/* Desktop sidebar */}
         <div className="hidden md:block">
           <AdminSidebar
+            counts={visibleCounts}
             collapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed((c) => !c)}
             user={user}
@@ -66,6 +120,7 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
                 transition={{ type: "spring", stiffness: 260, damping: 30 }}
               >
                 <AdminSidebar
+                  counts={visibleCounts}
                   drawer
                   onNavigate={() => setSidebarOpen(false)}
                   collapsed={false}

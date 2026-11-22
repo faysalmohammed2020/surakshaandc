@@ -12,7 +12,10 @@ import { ADMIN_NAV, isAdminRouteActive } from "./admin-nav";
 import { site } from "@/lib/site";
 import { Heart } from "@/components/decor";
 
+export type SidebarCounts = { liveChat: number; enquiries: number };
+
 interface Props {
+  counts?: SidebarCounts;
   onNavigate?: () => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -35,10 +38,13 @@ const AdminSidebar = ({
   onToggleCollapse,
   user,
   drawer = false,
+  counts,
 }: Props) => {
   const pathname = usePathname();
   const t = useTranslations("admin");
-  const dir = useLocale() === "ar" ? "rtl" : "ltr";
+  const locale = useLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
+  const number = new Intl.NumberFormat(locale);
   const [signingOut, setSigningOut] = React.useState(false);
 
   const handleSignOut = async () => {
@@ -126,12 +132,16 @@ const AdminSidebar = ({
               {group.items.map((item) => {
                 const active = isAdminRouteActive(pathname, item.href);
                 const Icon = item.icon;
+                const count = item.key === "liveChat" ? counts?.liveChat : item.key === "enquiries" ? counts?.enquiries : undefined;
+                const label = t(`nav.items.${item.key}.name`);
+                const countLabel = count === undefined ? undefined : number.format(count);
                 return (
                   <li key={item.href}>
                     <Link
                       href={item.href}
                       onClick={onNavigate}
-                      title={collapsed ? t(`nav.items.${item.key}.name`) : undefined}
+                      title={collapsed ? `${label}${countLabel === undefined ? "" : ` (${countLabel})`}` : undefined}
+                      aria-label={countLabel === undefined ? undefined : `${label} (${countLabel})`}
                       aria-current={active ? "page" : undefined}
                       className={`adm-link relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium ${
                         collapsed ? "justify-center" : ""
@@ -140,9 +150,17 @@ const AdminSidebar = ({
                       <span className="adm-ic">
                         <Icon size={17} className="shrink-0" />
                       </span>
-                      {!collapsed && <span className="truncate">
-                          {t(`nav.items.${item.key}.name`)}
+                      {!collapsed && <span className="min-w-0 flex-1 truncate">
+                          {label}
                         </span>}
+                      {countLabel !== undefined && (
+                        <span
+                          aria-hidden="true"
+                          className={`adm-count ${collapsed ? "is-collapsed" : ""}`}
+                        >
+                          {collapsed && (count ?? 0) > 99 ? `${number.format(99)}+` : countLabel}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
