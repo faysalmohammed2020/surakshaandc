@@ -41,7 +41,7 @@ export default async function CategoryPage({ params }: P) {
     <>
       <PageHero
         title={c.name}
-        eyebrow={c.nameBn}
+        eyebrow={d.services.heroEyebrow}
         sub={c.description}
         crumbs={[
           { label: d.common.breadcrumbHome, href: localePath(locale, "/") },

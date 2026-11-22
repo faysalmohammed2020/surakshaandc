@@ -8,8 +8,8 @@ import type { Locale } from "@/i18n/config";
  * Source content: categories/services are written in English, blog posts in Bangla.
  * getContent() returns every item in the requested language.
  *
- * For Bangla, `name` holds the Bangla name and `nameBn` the English one — cards show `name` as the
- * heading and `nameBn` as the small secondary line, exactly like the English site does in reverse.
+ * `name` is always the requested language. `nameBn` retains the alternate name
+ * for legacy consumers; public pages render only `name`.
  */
 
 const toBlocks = (blocks: BnBlock[]): Block[] =>

@@ -54,7 +54,6 @@ export default async function ServicesPage({ params }: P) {
                     <Icon className="h-6 w-6" />
                   </span>
                   <div>
-                    <p lang={locale === "en" ? "bn" : "en"} className="text-sm text-secondary-700">{c.nameBn}</p>
                     <h2 className="text-2xl font-bold text-ink md:text-3xl">{c.name}</h2>
                   </div>
                 </div>

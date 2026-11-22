@@ -35,7 +35,7 @@ export default async function BlogPage({ params, searchParams }: P) {
   let pages = 1;
   let months: Awaited<ReturnType<typeof getArchiveMonths>> = [];
   try {
-    [{ posts, pages }, months] = await Promise.all([getBlogList(query), getArchiveMonths()]);
+    [{ posts, pages }, months] = await Promise.all([getBlogList(query, locale), getArchiveMonths(locale)]);
   } catch (e) {
     console.error("[blog] could not load posts:", e);
   }

@@ -148,15 +148,10 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
     }));
   };
 
-  // ✅ Main image upload → POST /api/upload (no folder param)
-  // /api/upload/${folder} → /api/upload/blogImages
-
-  // 🔹 Main image upload → /api/upload/${folder}
+  // Both image fields use the authenticated upload API, which returns { url }.
   const handleImageFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const folder = "blogImages"; // public/upload/blogImages এর জন্য
 
     try {
       setUploadingImage(true);
@@ -164,7 +159,7 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
       const fd = new FormData();
       fd.append("file", file);
 
-      const res = await fetch(`/api/upload/${folder}`, {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: fd,
       });
@@ -177,13 +172,11 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
 
       const data = await res.json();
 
-      // ✅ এখানে এখন data.url চেক করবে, fileUrl না
-      if (!data.url) {
+      if (typeof data.url !== "string" || !data.url) {
         console.error("Invalid upload response:", data);
         throw new Error(t("toast.invalidResponse"));
       }
 
-      // এই URL টা সরাসরি image field এ বসবে (DB-তে যাবে)
       setFormData((prev) => ({
         ...prev,
         image: data.url,
@@ -197,6 +190,7 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
       toast.error(message);
     } finally {
       setUploadingImage(false);
+      e.target.value = "";
     }
   };
 
@@ -204,15 +198,13 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const folder = "blogAds";
-
     try {
       setUploadingAdImage(true);
 
       const fd = new FormData();
       fd.append("file", file);
 
-      const res = await fetch(`/api/upload/${folder}`, {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: fd,
       });
@@ -225,7 +217,7 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
 
       const data = await res.json();
 
-      if (!data.url) {
+      if (typeof data.url !== "string" || !data.url) {
         console.error("Invalid upload response:", data);
         throw new Error(t("toast.invalidResponse"));
       }
@@ -243,6 +235,7 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
       toast.error(message);
     } finally {
       setUploadingAdImage(false);
+      e.target.value = "";
     }
   };
 
@@ -446,7 +439,7 @@ export default function BlogForm({ blog, onSuccess }: BlogFormProps) {
           </button>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || uploadingImage || uploadingAdImage}
             className="px-4 py-2 btn-gradient text-white rounded-lg disabled:opacity-50"
           >
             {loading ? t("saving") : blog ? t("update") : t("create")}

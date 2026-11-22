@@ -2,6 +2,7 @@ import { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { processBlogSummary } from "@/components/admin/blog/summaryUtils";
 import { sanitizeRichHtml } from "@/lib/security/sanitize-html";
+import type { Locale } from "@/i18n/config";
 
 /** Public blog data layer: reads the same posts the admin manages at /admin/blog. */
 
@@ -73,8 +74,17 @@ function whereFor({ q, month }: Pick<BlogListQuery, "q" | "month">): Prisma.Blog
   return where;
 }
 
-export async function getBlogList(query: BlogListQuery) {
+/** Legacy/admin posts have no locale column. Classify by the title's script. */
+async function localeIds(locale: Locale) {
+  const bangla = locale === "bn";
+  const rows = await prisma.$queryRaw<{ id: number }[]>`
+    SELECT id FROM "Blog" WHERE (title ~ '[ঀ-৿]') = ${bangla}`;
+  return rows.map(({ id }) => id);
+}
+
+export async function getBlogList(query: BlogListQuery, locale: Locale = "en") {
   const where = whereFor(query);
+  where.id = { in: await localeIds(locale) };
   const [posts, total] = await Promise.all([
     prisma.blog.findMany({
       where,
@@ -92,9 +102,9 @@ export async function getBlogList(query: BlogListQuery) {
   };
 }
 
-export async function getRecentBlogs(limit = 5, excludeId?: number) {
+export async function getRecentBlogs(limit = 5, excludeId?: number, locale: Locale = "en") {
   const posts = await prisma.blog.findMany({
-    where: excludeId ? { id: { not: excludeId } } : {},
+    where: { id: { in: await localeIds(locale), ...(excludeId ? { not: excludeId } : {}) } },
     select: listSelect,
     orderBy: [{ date: "desc" }, { createdAt: "desc" }],
     take: limit,
@@ -103,10 +113,11 @@ export async function getRecentBlogs(limit = 5, excludeId?: number) {
 }
 
 /** Months that have posts, newest first (text from SQL, so no time-zone drift). */
-export async function getArchiveMonths(): Promise<ArchiveMonth[]> {
+export async function getArchiveMonths(locale: Locale = "en"): Promise<ArchiveMonth[]> {
+  const bangla = locale === "bn";
   const rows = await prisma.$queryRaw<{ ym: string; count: number }[]>`
     SELECT to_char("date", 'YYYY-MM') AS ym, COUNT(*)::int AS count
-    FROM "Blog" GROUP BY ym ORDER BY ym DESC`;
+    FROM "Blog" WHERE (title ~ '[ঀ-৿]') = ${bangla} GROUP BY ym ORDER BY ym DESC`;
   return rows.map((row) => {
     const [year, month] = row.ym.split("-").map(Number);
     return { value: row.ym, year, month, count: row.count };
@@ -122,8 +133,13 @@ export async function getSidebarAd() {
   });
 }
 
-export async function getBlogBySlug(slug: string) {
-  return prisma.blog.findUnique({ where: { slug } });
+export async function getBlogBySlug(slug: string, locale?: Locale) {
+  const post = await prisma.blog.findUnique({ where: { slug } });
+  if (!post || !locale || /[ঀ-৿]/.test(post.title) === (locale === "bn")) return post;
+  const translatedSlug = locale === "bn" ? `${slug}-bn` : slug.replace(/-bn$/, "");
+  if (translatedSlug === slug) return null;
+  const translated = await prisma.blog.findUnique({ where: { slug: translatedSlug } });
+  return translated && /[ঀ-৿]/.test(translated.title) === (locale === "bn") ? translated : null;
 }
 
 /** Excerpt that is safe to render as plain text. */

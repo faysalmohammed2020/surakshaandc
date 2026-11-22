@@ -79,8 +79,8 @@ export const en = {
     closeMenu: "Close menu",
     mainNav: "Main",
     mobileNav: "Mobile",
-    switchTo: "Switch language to বাংলা",
-    otherLang: "বাংলা",
+    switchTo: "Switch language to Bangla",
+    otherLang: "Bangla",
   },
 
   logo: { homeAria: "{name} home" },

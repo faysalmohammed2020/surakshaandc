@@ -82,8 +82,8 @@ export const bn: Dict = {
     closeMenu: "মেনু বন্ধ করুন",
     mainNav: "প্রধান মেনু",
     mobileNav: "মোবাইল মেনু",
-    switchTo: "Switch language to English",
-    otherLang: "English",
+    switchTo: "ইংরেজি ভাষায় দেখুন",
+    otherLang: "ইংরেজি",
   },
 
   logo: { homeAria: "{name} — হোম" },

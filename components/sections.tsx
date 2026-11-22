@@ -71,7 +71,6 @@ export function CategoryCard({ c, i, count, locale }: { c: Category; i: number; 
         </span>
         <span className="hx-chip">{fmt(d.cards.programmes, { n: fmtNum(locale, count) })}</span>
       </div>
-      <p lang={locale === "en" ? "bn" : "en"} className="cc-alt">{c.nameBn}</p>
       <h3>{c.name}</h3>
       <p className="cc-desc">{c.description}</p>
       <span className="cc-cta">
@@ -144,7 +143,7 @@ export function CtaBand({ locale }: { locale: Locale }) {
         <Hearts preset="soft" />
         <div className="cta-grid">
           <div>
-            <p lang="bn" className="cta-eyebrow">
+            <p lang={locale} className="cta-eyebrow">
               <Heart className="h-4 w-4" /> {d.cta.eyebrow}
             </p>
             <h2>{d.cta.title}</h2>

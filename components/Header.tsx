@@ -33,7 +33,7 @@ function LangSwitch({ className = "" }: { className?: string }) {
     <Link
       href={localePath(other, target)}
       hrefLang={other}
-      lang={other}
+      lang={locale}
       prefetch={false}
       aria-label={d.header.switchTo}
       className={`lang-switch inline-flex h-11 items-center rounded-full border-2 border-primary-200 px-4 font-semibold text-primary-700 transition hover:border-primary hover:bg-primary-50 ${className}`}

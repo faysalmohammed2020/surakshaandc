@@ -39,7 +39,7 @@ export default async function HomePage({ params }: P) {
   const lp = (href: string) => localePath(locale, href);
   const num = (n: number) => fmtNum(locale, n);
   const { categories, services, servicesOf } = getContent(locale);
-  const posts = await getRecentBlogs(5).catch(() => []);
+  const posts = await getRecentBlogs(5, undefined, locale).catch(() => []);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -67,7 +67,6 @@ export default async function HomePage({ params }: P) {
     return {
       slug: c.slug,
       name: c.name,
-      alt: c.nameBn,
       description: c.description,
       image: stackImages[c.slug] ?? c.image,
       href: lp(`/services/${c.slug}`),

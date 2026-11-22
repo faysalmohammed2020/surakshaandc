@@ -523,6 +523,21 @@
 }
 .hx-stack-dots span.on { width: 2.2rem; background: var(--tc); }
 
+/* Phones: swipe slider instead of scroll pinning. */
+.hx-stack.is-swipe { --ch: 31rem; height: auto; margin-top: 3rem; }
+.hx-stack.is-swipe .hx-stack-sticky { position: relative; height: auto; padding-top: 0; padding-bottom: 0.5rem; }
+.hx-stack.is-swipe .hx-stack-track {
+  flex: none;
+  height: calc(var(--ch) + 2.5rem);
+  margin-top: 0.6rem;
+  touch-action: pan-y; /* vertical page scroll stays native; horizontal drags change cards */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.hx-stack.is-swipe .hx-stack-track:active { cursor: grabbing; }
+.hx-stack.is-swipe .hx-scard img { pointer-events: none; -webkit-user-drag: none; }
+
 /* No pinning when motion is reduced (or JS flagged it): a simple grid. */
 .hx-stack.is-static { height: auto; }
 .hx-stack.is-static .hx-stack-sticky { position: static; height: auto; padding-top: 0; }

@@ -6,7 +6,7 @@ import { Building2, CheckCircle2, GraduationCap, Quote } from "lucide-react";
 import { Brush, Heart } from "@/components/decor";
 import { CtaBand, PageHero } from "@/components/sections";
 import { ImgFrame, SectionHeading } from "@/components/ui";
-import { bilingual, facilities, site, teamRoles, therapies } from "@/lib/site";
+import { facilities, site, teamRoles, therapies } from "@/lib/site";
 import { getDict } from "@/i18n";
 import { fmt, fmtNum, hasLocale, localePath } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
@@ -24,18 +24,16 @@ export default async function AboutPage({ params }: P) {
   if (!hasLocale(locale)) notFound();
   const d = getDict(locale);
   const a = d.about;
-  const alt = locale === "en" ? "bn" : "en";
   const text = (bangla: string, english: string) => (locale === "bn" ? bangla : english);
 
   const list = (items: { en: string; bn: string }[]) =>
     items.map((f) => {
-      const [primary, secondary] = bilingual(f, locale);
+      const primary = f[locale];
       return (
         <li key={f.en} className="flex gap-3">
           <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
           <span>
             <span className="font-semibold text-ink">{primary}</span>
-            <span lang={alt} className="text-subtle"> · {secondary}</span>
           </span>
         </li>
       );
@@ -59,7 +57,7 @@ export default async function AboutPage({ params }: P) {
           </ImgFrame>
         </div>
         <div>
-          <SectionHeading align="left" eyebrow={a.storyEyebrow} title={<span lang="bn">{site.fullNameBn}</span>} />
+          <SectionHeading align="left" eyebrow={a.storyEyebrow} title={d.site.fullName} />
           <div className="mt-6 space-y-5 text-[1.07rem] leading-[1.9] text-ink-soft">
             {a.story.map((p, i) => (
               <p key={i}>{p}</p>
@@ -68,8 +66,7 @@ export default async function AboutPage({ params }: P) {
 
           <div id="founder" className="mt-10 scroll-mt-28 rounded-[2rem] bg-primary-50 p-7">
             <Quote className="h-8 w-8 text-secondary" />
-            <p lang="bn" className="mt-3 font-display text-2xl font-bold text-ink">{site.founder.nameBn}</p>
-            <p className="font-semibold text-primary-700">{site.founder.name}</p>
+            <p className="mt-3 font-display text-2xl font-bold text-ink">{d.site.founderName}</p>
             <p className="mt-1 text-ink-soft">
               {fmt(a.founderLine, { role: d.site.founderRole, n: fmtNum(locale, site.founder.years) })}
             </p>
@@ -90,13 +87,12 @@ export default async function AboutPage({ params }: P) {
         </div>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {teamRoles.map((r, i) => {
-            const [primary, secondary] = bilingual(r, locale);
+            const primary = r[locale];
             return (
               <div key={r.en} className={`ab-team-card t${i % 6}`}>
                 <span>{fmtNum(locale, i + 1).padStart(2, locale === "bn" ? "০" : "0")}</span>
                 <span>
                   <span className="block text-lg font-semibold text-ink">{primary}</span>
-                  <span lang={alt} className="text-sm text-subtle">{secondary}</span>
                 </span>
               </div>
             );
@@ -109,13 +105,13 @@ export default async function AboutPage({ params }: P) {
         <div className="rounded-[2.5rem] bg-white p-8 shadow-soft md:p-10">
           <Building2 className="h-9 w-9 text-secondary" />
           <h2 className="mt-4 text-3xl font-bold text-ink">{a.facilitiesTitle}</h2>
-          <p lang="bn" className="mt-2 text-ink-soft">{a.facilitiesSub}</p>
+          <p className="mt-2 text-ink-soft">{a.facilitiesSub}</p>
           <ul className="mt-6 space-y-3">{list(facilities)}</ul>
         </div>
         <div className="rounded-[2.5rem] bg-white p-8 shadow-soft md:p-10">
           <GraduationCap className="h-9 w-9 text-secondary" />
           <h2 className="mt-4 text-3xl font-bold text-ink">{a.therapyTitle}</h2>
-          <p lang={alt} className="mt-2 text-ink-soft">{a.therapySub}</p>
+          <p className="mt-2 text-ink-soft">{a.therapySub}</p>
           <ul className="mt-6 space-y-3">{list(therapies)}</ul>
         </div>
       </section>

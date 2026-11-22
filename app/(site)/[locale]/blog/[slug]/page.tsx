@@ -6,7 +6,7 @@ import { CtaBand, PageHero } from "@/components/sections";
 import { ImgFrame } from "@/components/ui";
 import { excerpt, getBlogBySlug, getRecentBlogs, sanitizeHtmlFragment } from "@/lib/blog";
 import { getDict } from "@/i18n";
-import { fmt, fmtDate, hasLocale, localePath } from "@/i18n/config";
+import { fmt, fmtDate, hasLocale, localePath, type Locale } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
 
 // Posts are managed in /admin/blog, so this page is always rendered fresh.
@@ -22,9 +22,9 @@ const decode = (s: string) => {
   }
 };
 
-async function load(slug: string) {
+async function load(slug: string, locale: Locale) {
   try {
-    return await getBlogBySlug(decode(slug));
+    return await getBlogBySlug(decode(slug), locale);
   } catch (e) {
     console.error("[blog] could not load post:", e);
     return null;
@@ -34,7 +34,7 @@ async function load(slug: string) {
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!hasLocale(locale)) return {};
-  const p = await load(slug);
+  const p = await load(slug, locale);
   if (!p) return {};
   return {
     title: p.title,
@@ -48,9 +48,9 @@ export default async function PostPage({ params }: P) {
   const { locale, slug } = await params;
   if (!hasLocale(locale)) notFound();
   const d = getDict(locale);
-  const p = await load(slug);
+  const p = await load(slug, locale);
   if (!p) notFound();
-  const recent = await getRecentBlogs(4, p.id).catch(() => []);
+  const recent = await getRecentBlogs(4, p.id, locale).catch(() => []);
 
   return (
     <>
