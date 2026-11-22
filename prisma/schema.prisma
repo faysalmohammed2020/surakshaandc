@@ -64,6 +64,11 @@ model User {
   phone         String?
   image         String?
   emailVerified DateTime?
+  /// Inactive accounts cannot sign in; their open sessions end on the next request.
+  isActive       Boolean   @default(true)
+  /// Bumped on password reset / role or status change to sign the user out everywhere.
+  sessionVersion Int       @default(0)
+  lastLoginAt    DateTime?
 
   accounts Account[]
   sessions Session[]

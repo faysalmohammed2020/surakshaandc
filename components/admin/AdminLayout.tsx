@@ -33,7 +33,7 @@ const AdminLayout = ({ children, pageTitle, user }: AdminLayoutProps) => {
 
   return (
     <div dir={dir} className="relative min-h-screen bg-background text-foreground">
-      {/* Soft brand glow behind the content */}
+      {/* Coloured heart decorations over the neutral content background. */}
       <div aria-hidden="true" className="adm-backdrop pointer-events-none fixed inset-0 z-0" />
 
       <div className="relative z-10 md:flex">

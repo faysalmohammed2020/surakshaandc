@@ -51,7 +51,7 @@ export default function RecentBlogs() {
     return (
       <div className="rounded-2xl border border-border bg-card backdrop-blur-sm shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10 bg-gradient-to-r from-primary to-secondary">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10 bg-primary">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card/15">
             <BookOpen className="h-5 w-5 text-white" />
           </div>

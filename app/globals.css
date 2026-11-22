@@ -253,31 +253,33 @@
    Public pages never use these names, so nothing here changes the site.
    --------------------------------------------------------------------- */
 :root {
-  --background: #f8f5fc;
-  --foreground: var(--brand-ink);
-  --card-foreground: var(--brand-ink);
+  --background: #f7f7f8;
+  --foreground: #202024;
+  --card: #ffffff;
+  --card-foreground: #202024;
   --popover: #ffffff;
-  --popover-foreground: var(--brand-ink);
+  --popover-foreground: #202024;
   --primary: var(--brand-primary);
   --primary-foreground: var(--on-primary);
   --secondary: var(--brand-secondary);
-  --muted: color-mix(in oklab, var(--brand-ink) 6%, white);
-  --muted-foreground: color-mix(in oklab, var(--brand-ink) 58%, white);
-  --border: color-mix(in oklab, var(--brand-ink) 12%, white);
-  --input: color-mix(in oklab, var(--brand-ink) 16%, white);
+  --muted: #f0f0f2;
+  --muted-foreground: #67676f;
+  --border: #e2e2e6;
+  --input: #d4d4da;
   --ring: color-mix(in oklab, var(--brand-primary) 60%, white);
   --destructive: #d92d20;
 }
 .dark {
-  --background: #140a21;
-  --foreground: #efe8f7;
-  --card-foreground: #efe8f7;
-  --popover: #1f1232;
-  --popover-foreground: #efe8f7;
-  --muted: #2a1a40;
-  --muted-foreground: #b3a3c9;
-  --border: #35234d;
-  --input: #3f2a5c;
+  --background: #121214;
+  --foreground: #f4f4f5;
+  --card: #1b1b1e;
+  --card-foreground: #f4f4f5;
+  --popover: #1b1b1e;
+  --popover-foreground: #f4f4f5;
+  --muted: #27272b;
+  --muted-foreground: #a1a1aa;
+  --border: #343439;
+  --input: #414147;
   --ring: color-mix(in oklab, var(--brand-primary) 70%, white);
   --destructive: #f0584b;
 }
@@ -287,6 +289,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -299,11 +302,6 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --color-subtle: color-mix(in oklab, var(--brand-ink) 52%, white);
-}
-
-/* Cards in the panel follow the theme (public cards stay white). */
-.dark .bg-card {
-  background-color: #1c1030;
 }
 
 @utility btn-gradient {

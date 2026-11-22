@@ -6,6 +6,7 @@ declare module "next-auth" {
   }
   interface User {
     role?: "USER" | "ADMIN";
+    sessionVersion?: number;
   }
 }
 
@@ -13,5 +14,8 @@ declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
     role?: "USER" | "ADMIN";
+    /** User.sessionVersion at sign-in; a mismatch ends the session. */
+    sv?: number;
+    revoked?: boolean;
   }
 }

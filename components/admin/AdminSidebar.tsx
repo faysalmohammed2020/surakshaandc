@@ -86,10 +86,10 @@ const AdminSidebar = ({
           </span>
           {!collapsed && (
             <span className="min-w-0 leading-tight">
-              <span className="block truncate font-display text-lg font-bold leading-none text-white">
+              <span className="block truncate font-display text-lg font-bold leading-none text-foreground">
                 Suraksha
               </span>
-              <span className="mt-0.5 block truncate text-xs text-white/60">
+              <span className="mt-0.5 block truncate text-xs text-muted-foreground">
                 {t("shell.panel")}
               </span>
             </span>
@@ -101,7 +101,7 @@ const AdminSidebar = ({
             type="button"
             onClick={onToggleCollapse}
             aria-label={t("shell.collapseSidebar")}
-            className="hidden size-8 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/10 hover:text-white md:flex"
+            className="hidden size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
           >
             {dir === "rtl" ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
           </button>
@@ -120,10 +120,10 @@ const AdminSidebar = ({
                 {t(`nav.groups.${group.key}`)}
               </p>
             ) : (
-              <div className="mx-3 mb-2 h-px bg-white/10" />
+              <div className="mx-3 mb-2 h-px bg-border" />
             )}
             <ul className="space-y-1">
-              {group.items.map((item, idx) => {
+              {group.items.map((item) => {
                 const active = isAdminRouteActive(pathname, item.href);
                 const Icon = item.icon;
                 return (
@@ -135,7 +135,7 @@ const AdminSidebar = ({
                       aria-current={active ? "page" : undefined}
                       className={`adm-link relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium ${
                         collapsed ? "justify-center" : ""
-                      } ${active ? "is-active" : ""} c${idx % 6}`}
+                      } ${active ? "is-active" : ""}`}
                     >
                       <span className="adm-ic">
                         <Icon size={17} className="shrink-0" />
@@ -153,20 +153,20 @@ const AdminSidebar = ({
       </nav>
 
       {/* Footer */}
-      <div className="relative shrink-0 border-t border-white/10 p-3">
+      <div className="relative shrink-0 border-t border-border p-3">
         {!collapsed && <Heart className="adm-side-heart" />}
         {collapsed && onToggleCollapse && (
           <button
             type="button"
             onClick={onToggleCollapse}
             aria-label={t("shell.expandSidebar")}
-            className="mb-2 hidden w-full items-center justify-center rounded-lg py-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white md:flex"
+            className="mb-2 hidden w-full items-center justify-center rounded-lg py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
           >
             {dir === "rtl" ? <ChevronsLeft size={18} /> : <ChevronsRight size={18} />}
           </button>
         )}
         <div
-          className={`relative flex items-center gap-3 rounded-xl bg-white/[0.07] p-2.5 ring-1 ring-white/10 ${
+          className={`relative flex items-center gap-3 rounded-xl bg-muted p-2.5 ring-1 ring-border ${
             collapsed ? "flex-col" : ""
           }`}
         >
@@ -178,16 +178,16 @@ const AdminSidebar = ({
               className="size-9 shrink-0 rounded-lg object-cover"
             />
           ) : (
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg btn-gradient text-xs font-bold text-white">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white">
               {initials(user?.name)}
             </span>
           )}
           {!collapsed && (
             <div className="min-w-0 flex-1 leading-tight">
-              <p className="truncate text-sm font-semibold text-white">
+              <p className="truncate text-sm font-semibold text-foreground">
                 {user?.name || t("shell.defaultUser")}
               </p>
-              <p className="truncate text-xs capitalize text-white/55">
+              <p className="truncate text-xs capitalize text-muted-foreground">
                 {t(`shell.role.${(user?.role || "admin").toLowerCase()}` as never)}
               </p>
             </div>
@@ -198,7 +198,7 @@ const AdminSidebar = ({
             disabled={signingOut}
             aria-label={t("shell.signOut")}
             title={t("shell.signOut")}
-            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-[#e8479a]/20 hover:text-[#ff8cc6] disabled:opacity-50"
+            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
           >
             <LogOut size={17} />
           </button>

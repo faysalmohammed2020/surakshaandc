@@ -165,15 +165,16 @@ function toISO(d: Date) {
 const pct = (part: number, total: number) =>
   total <= 0 ? 0 : Math.round((part / total) * 1000) / 10;
 
+// One brand hue in steps (no rainbow).
 const PIE_COLORS = [
-  "#111827",
-  "#3b82f6",
-  "#a855f7",
-  "#10b981",
-  "#f59e0b",
-  "#ef4444",
-  "#06b6d4",
-  "#84cc16",
+  "#7c4dcc",
+  "#a283e0",
+  "#c7b3ef",
+  "#5a33a3",
+  "#8e6bd6",
+  "#3f2475",
+  "#b49ae8",
+  "#e2d7f7",
 ];
 
 const BD_TIMEZONE = "Asia/Dhaka";
@@ -291,12 +292,12 @@ const AdminDashboard: React.FC = () => {
 
     if (n.includes("chrome")) return <FaChrome className="text-primary" />;
     if (n.includes("firefox"))
-      return <FaFirefoxBrowser className="text-orange-500" />;
-    if (n.includes("safari")) return <FaSafari className="text-sky-500" />;
-    if (n.includes("edge")) return <FaEdge className="text-emerald-600" />;
-    if (n.includes("opera")) return <FaOpera className="text-red-500" />;
+      return <FaFirefoxBrowser className="text-primary" />;
+    if (n.includes("safari")) return <FaSafari className="text-primary" />;
+    if (n.includes("edge")) return <FaEdge className="text-primary" />;
+    if (n.includes("opera")) return <FaOpera className="text-primary" />;
     if (n.includes("ie") || n.includes("internet explorer"))
-      return <FaInternetExplorer className="text-sky-700" />;
+      return <FaInternetExplorer className="text-primary" />;
 
     // fallback icon
     return <FaGlobeAmericas className="text-muted-foreground" />;
@@ -629,8 +630,8 @@ const AdminDashboard: React.FC = () => {
                 ? "…"
                 : numberFormatter.format(analytics?.kpis.liveUsers ?? 0)
             }
-            icon={<FaGlobeAmericas className="text-xl text-white" />}
-            color="bg-gradient-to-br from-emerald-400 to-green-600"
+            icon={<FaGlobeAmericas className="text-xl text-primary" />}
+            color="bg-primary/10"
             loading={analyticsLoading || isPending}
           />
           <StatCard
@@ -640,8 +641,8 @@ const AdminDashboard: React.FC = () => {
                 ? "…"
                 : numberFormatter.format(analytics?.kpis.visitors ?? 0)
             }
-            icon={<FaEye className="text-xl text-white" />}
-            color="bg-gradient-to-br from-blue-500 to-indigo-600"
+            icon={<FaEye className="text-xl text-primary" />}
+            color="bg-primary/10"
             loading={analyticsLoading || isPending}
           />
           <StatCard
@@ -651,8 +652,8 @@ const AdminDashboard: React.FC = () => {
                 ? "…"
                 : numberFormatter.format(analytics?.kpis.pageViews ?? 0)
             }
-            icon={<FaRegChartBar className="text-xl text-white" />}
-            color="bg-gradient-to-br from-amber-400 to-orange-600"
+            icon={<FaRegChartBar className="text-xl text-primary" />}
+            color="bg-primary/10"
             loading={analyticsLoading || isPending}
           />
           <StatCard
@@ -662,8 +663,8 @@ const AdminDashboard: React.FC = () => {
                 ? "…"
                 : fmtSec(analytics?.kpis.activeTimeSec ?? 0)
             }
-            icon={<FaFileAlt className="text-xl text-white" />}
-            color="bg-gradient-to-br from-purple-500 to-pink-600"
+            icon={<FaFileAlt className="text-xl text-primary" />}
+            color="bg-primary/10"
             loading={analyticsLoading || isPending}
           />
           <StatCard
@@ -673,8 +674,8 @@ const AdminDashboard: React.FC = () => {
                 ? "…"
                 : fmtSec(analytics?.kpis.avgActiveTimeSec ?? 0)
             }
-            icon={<FaGlobeAmericas className="text-xl text-white" />}
-            color="bg-gradient-to-br from-teal-400 to-cyan-600"
+            icon={<FaGlobeAmericas className="text-xl text-primary" />}
+            color="bg-primary/10"
             loading={analyticsLoading || isPending}
           />
         </div>
@@ -741,12 +742,12 @@ const AdminDashboard: React.FC = () => {
                         >
                           <stop
                             offset="5%"
-                            stopColor="#6366f1"
+                            stopColor="#7c4dcc"
                             stopOpacity={0.3}
                           />
                           <stop
                             offset="95%"
-                            stopColor="#6366f1"
+                            stopColor="#7c4dcc"
                             stopOpacity={0}
                           />
                         </linearGradient>
@@ -796,11 +797,11 @@ const AdminDashboard: React.FC = () => {
                       <Area
                         type="monotone"
                         dataKey="visitors"
-                        stroke="#6366f1"
+                        stroke="#7c4dcc"
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#visitorsGradient)"
-                        dot={{ stroke: "#6366f1", strokeWidth: 2, r: 3 }}
+                        dot={{ stroke: "#7c4dcc", strokeWidth: 2, r: 3 }}
                         activeDot={{ r: 6, strokeWidth: 2, stroke: "#fff" }}
                       />
                     </ComposedChart>
@@ -849,12 +850,12 @@ const AdminDashboard: React.FC = () => {
                         >
                           <stop
                             offset="5%"
-                            stopColor="#10b981"
+                            stopColor="#7c4dcc"
                             stopOpacity={0.8}
                           />
                           <stop
                             offset="95%"
-                            stopColor="#10b981"
+                            stopColor="#7c4dcc"
                             stopOpacity={0.2}
                           />
                         </linearGradient>
@@ -979,7 +980,7 @@ const AdminDashboard: React.FC = () => {
                                 </span>
                                 <div className="w-24 bg-gray-200 rounded-full h-2">
                                   <div
-                                    className="bg-emerald-500 h-2 rounded-full"
+                                    className="bg-primary h-2 rounded-full"
                                     style={{
                                       width: `${Math.min(
                                         100,
@@ -1075,12 +1076,12 @@ const AdminDashboard: React.FC = () => {
                         >
                           <stop
                             offset="5%"
-                            stopColor="#8b5cf6"
+                            stopColor="#7c4dcc"
                             stopOpacity={0.8}
                           />
                           <stop
                             offset="95%"
-                            stopColor="#8b5cf6"
+                            stopColor="#7c4dcc"
                             stopOpacity={0.3}
                           />
                         </linearGradient>
@@ -1165,7 +1166,7 @@ const AdminDashboard: React.FC = () => {
                     <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
                       <div className="p-4 border-b border-border bg-muted/20">
                         <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-[#BC913A]"></div>
+                          <div className="w-2 h-2 rounded-full bg-primary"></div>
                           {tr("geo.topCountries")}
                         </h4>
                       </div>
@@ -1211,7 +1212,7 @@ const AdminDashboard: React.FC = () => {
                     <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
                       <div className="p-4 border-b border-border bg-muted/20">
                         <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                          <div className="w-2 h-2 rounded-full bg-primary"></div>
                           {tr("geo.topCities")}
                         </h4>
                       </div>
@@ -1219,10 +1220,10 @@ const AdminDashboard: React.FC = () => {
                         {(analytics.geo.cities ?? []).map((c, index) => (
                           <div
                             key={c.name}
-                            className="flex items-center justify-between p-3 hover:bg-emerald-50/30 rounded-lg transition-colors group"
+                            className="flex items-center justify-between p-3 hover:bg-primary/5 rounded-lg transition-colors group"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">
+                              <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
                                 {index + 1}
                               </div>
                               <span className="font-medium text-foreground">
@@ -1235,7 +1236,7 @@ const AdminDashboard: React.FC = () => {
                               </span>
                               <div className="w-32 bg-gray-200 rounded-full h-2">
                                 <div
-                                  className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                                  className="bg-primary h-2 rounded-full transition-all duration-500"
                                   style={{
                                     width: `${Math.min(
                                       100,
@@ -1604,7 +1605,7 @@ const AdminDashboard: React.FC = () => {
               </button>
               <button
                 onClick={() => handleEditSave(editBlogData)}
-                className="px-4 py-2 btn-gradient text-white rounded-lg hover:opacity-90"
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90"
               >
                 {tr("blogs.save")}
               </button>

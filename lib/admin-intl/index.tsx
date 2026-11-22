@@ -29,5 +29,17 @@ export function useLocale() {
 
 export function useTranslations(namespace?: string) {
   const { messages } = useContext(Ctx);
-  return (key: string, params?: Record<string, string | number>) => translate(messages, namespace, key, params);
+  const t = (key: string, params?: Record<string, string | number>) => translate(messages, namespace, key, params);
+  /** True when the key exists (next-intl's `t.has`). */
+  t.has = (key: string) => translate(messages, namespace, key) !== key;
+  return t;
+}
+
+/** Subset of next-intl's `useFormatter`: dates and numbers in the panel locale. */
+export function useFormatter() {
+  const { locale } = useContext(Ctx);
+  return {
+    dateTime: (value: Date, options?: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(locale, options).format(value),
+    number: (value: number, options?: Intl.NumberFormatOptions) => new Intl.NumberFormat(locale, options).format(value),
+  };
 }

@@ -67,14 +67,19 @@ export const authOptions: NextAuthOptions = {
           user.passwordHash,
         );
         if (!isPasswordValid) return null;
+        // Deactivated from Admin → Users. Checked after the password so it doesn't reveal which emails exist.
+        if (!user.isActive) throw new Error("This account has been deactivated. Please contact the administrator.");
 
         loginPerAccount.reset(`${email}|${ip}`);
+        // Raw SQL so `updatedAt` (used for edit-conflict checks in Admin → Users) is not bumped by a sign-in.
+        await db.$executeRaw`UPDATE "users" SET "lastLoginAt" = NOW() WHERE "id" = ${user.id}`;
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           image: user.image,
           role: user.role,
+          sessionVersion: user.sessionVersion,
         };
       },
     }),
@@ -84,12 +89,29 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
+        token.role = user.role;
+        token.sv = user.sessionVersion ?? 0;
+        return token;
       }
+      if (!token.id || token.revoked) return token;
+      // Re-check the account on every session read so a deactivation, role change or password
+      // reset from Admin → Users takes effect immediately instead of when the JWT expires.
+      const current = await db.user.findUnique({
+        where: { id: token.id },
+        select: { role: true, isActive: true, sessionVersion: true, name: true, email: true },
+      });
+      if (!current || !current.isActive || current.sessionVersion !== (token.sv ?? 0)) {
+        return { revoked: true };
+      }
+      token.role = current.role;
+      token.name = current.name;
+      token.email = current.email;
       return token;
     },
 
     async session({ session, token }) {
+      // Revoked token: behave as signed out.
+      if (token.revoked) return { ...session, user: undefined } as unknown as typeof session;
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as "USER" | "ADMIN";

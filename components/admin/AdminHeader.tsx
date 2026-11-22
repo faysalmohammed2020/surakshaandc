@@ -49,7 +49,7 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
   const Icon = page.icon;
 
   return (
-    <header dir={dir} className="adm-header sticky top-0 z-30 border-b border-border bg-card/85 backdrop-blur-xl">
+    <header dir={dir} className="adm-header sticky top-0 z-30 border-b border-border bg-card">
       <div className="flex h-16 items-center justify-between gap-3 px-4 md:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <button
@@ -61,7 +61,7 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
             <Menu size={20} />
           </button>
 
-          <span className="hidden size-10 shrink-0 items-center justify-center rounded-xl btn-gradient text-white shadow-[0_10px_20px_-12px_#7c4dcc] sm:flex">
+          <span className="hidden size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-[0_10px_20px_-12px_#7c4dcc] sm:flex">
             <Icon size={19} />
           </span>
           <div className="min-w-0 leading-tight">
@@ -94,7 +94,7 @@ const AdminHeader = ({ toggleSidebar, user }: AdminHeaderProps) => {
                 className="size-9 rounded-xl object-cover"
               />
             ) : (
-              <span className="flex size-9 items-center justify-center rounded-full btn-gradient text-xs font-bold text-white">
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                 {initials(user?.name)}
               </span>
             )}
