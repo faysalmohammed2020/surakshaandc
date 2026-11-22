@@ -1,60 +1,49 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import { randomBytes } from "node:crypto";
 
 import { db } from "../lib/db";
 import { resetDemoBlogs, seedDemoBlogs } from "./seed-blogs";
 
 /**
- * Creates (or repairs) the admin account used to sign in at /auth/signin → /admin.
- *
- *   SEED_ADMIN_EMAIL     default: admin@example.com
- *   SEED_ADMIN_PASSWORD  min 12 chars. If unset in development a random one is
- *                        generated and printed once. Required in production.
- *
- * Re-running is safe: an existing account is promoted to ADMIN, and its password
- * is only changed when SEED_ADMIN_PASSWORD is set.
+ * Admin account used to sign in at /auth/signin → /admin.
+ * Edit these two values to change the login; the next seed (every `npm run build`)
+ * applies the change. They are no longer read from .env.
+ */
+const ADMIN_EMAIL = "admin@example.com";
+const ADMIN_PASSWORD = "admin123";
+
+/**
+ * Creates (or repairs) the admin account.
+ * Re-running is safe: an existing account is promoted to ADMIN, and its password is
+ * only rewritten when it no longer matches ADMIN_PASSWORD.
  */
 async function seedAdminUser() {
-  const email = (process.env.SEED_ADMIN_EMAIL || "admin@example.com").trim().toLowerCase();
-  const password = process.env.SEED_ADMIN_PASSWORD;
-
-  if (!password && process.env.NODE_ENV === "production") {
-    console.warn("Skipping admin seed: set SEED_ADMIN_PASSWORD (min 12 chars) to create one.");
-    return;
-  }
-  // Short passwords are fine for local development; production needs a strong one.
-  if (password && process.env.NODE_ENV === "production" && password.length < 12) {
-    throw new Error("SEED_ADMIN_PASSWORD must be at least 12 characters in production.");
-  }
-  if (password && password.length < 12) {
-    console.warn("Warning: weak admin password (under 12 chars). Change it before going live.");
-  }
+  const email = ADMIN_EMAIL.trim().toLowerCase();
+  const password = ADMIN_PASSWORD;
 
   const existing = await db.user.findUnique({ where: { email } });
 
   if (!existing) {
-    const finalPassword = password ?? randomBytes(12).toString("base64url");
     await db.user.create({
       data: {
         email,
         name: "Admin",
         role: "ADMIN",
-        passwordHash: await bcrypt.hash(finalPassword, 12),
+        passwordHash: await bcrypt.hash(password, 12),
         emailVerified: new Date(),
       },
     });
     console.log("Admin created:", email);
-    if (!password) console.log("Generated dev admin password (shown once):", finalPassword);
     return;
   }
 
   const data: { role?: "ADMIN"; passwordHash?: string } = {};
   if (existing.role !== "ADMIN") data.role = "ADMIN";
-  if (password) data.passwordHash = await bcrypt.hash(password, 12);
+  const matches = existing.passwordHash ? await bcrypt.compare(password, existing.passwordHash) : false;
+  if (!matches) data.passwordHash = await bcrypt.hash(password, 12);
   if (Object.keys(data).length) {
     await db.user.update({ where: { id: existing.id }, data });
-    console.log("Admin updated:", email, password ? "(password reset)" : "(promoted to ADMIN)");
+    console.log("Admin updated:", email, data.passwordHash ? "(password set from seed)" : "(promoted to ADMIN)");
   } else {
     console.log("Admin already exists:", email);
   }

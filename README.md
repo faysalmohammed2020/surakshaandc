@@ -51,8 +51,8 @@ analytics and the admin panel need **PostgreSQL**.
 
 1. Create a Postgres database (free option: [Neon](https://neon.tech)) and put its connection
    string in `.env` as `DATABASE_URL` (see `.env.example`).
-2. Set `NEXTAUTH_SECRET` (`openssl rand -base64 32`) and, for the seeded admin,
-   `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (min 12 characters).
+2. Set `NEXTAUTH_SECRET` (`openssl rand -base64 32`). The admin login is set in
+   `prisma/seed.ts` (`ADMIN_EMAIL` / `ADMIN_PASSWORD`).
 3. Create the tables and the admin account + starter blog posts:
 
    ```bash
@@ -64,8 +64,8 @@ analytics and the admin panel need **PostgreSQL**.
 4. Sign in at **/auth/signin** → you land in **/admin**.
 
 `npm run db:seed` is safe to repeat: it never overwrites blog posts you edited, promotes the
-admin email to ADMIN if needed, and only resets the password when `SEED_ADMIN_PASSWORD` is set.
-In production the seed refuses to run without `SEED_ADMIN_PASSWORD`.
+admin email to ADMIN if needed, and only rewrites the password when it no longer matches
+`ADMIN_PASSWORD` in `prisma/seed.ts`.
 
 ### What is where
 
